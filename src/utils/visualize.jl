@@ -118,7 +118,11 @@ Instead of colored dots, it draws arrows (quivers) at each site.
 The direction of the arrow corresponds to the angle \\theta of the spin.
 """
 function plot_state!(
-    p::Plots.Plot, lat::AbstractLattice, grids::AbstractVector, model::XYModel; marker_size=10.0
+    p::Plots.Plot,
+    lat::AbstractLattice,
+    grids::AbstractVector,
+    model::XYModel;
+    marker_size=10.0,
 )
     xs = [position(lat, i)[1] for i in 1:num_sites(lat)]
     ys = [position(lat, i)[2] for i in 1:num_sites(lat)]
