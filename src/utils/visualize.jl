@@ -1,5 +1,5 @@
 """
-    plot_setup(lat::Lattice; title="") -> (Plots.Plot, Float64)
+    plot_setup(lat::AbstractLattice; title="") -> (Plots.Plot, Float64)
 
 Initializes the plotting environment for a lattice simulation.
 
@@ -11,7 +11,7 @@ const p_init = plot(;
     aspect_ratio=:equal, grid=false, axis=false, ticks=false, legend=:bottomright
 )
 
-function plot_setup(lat::Lattice; title="")
+function plot_setup(lat::AbstractLattice; title="")
     ms = find_marker_size(lat)
     p = plot(;
         aspect_ratio=:equal, grid=false, axis=false, ticks=false, legend=false, title=title
@@ -20,7 +20,7 @@ function plot_setup(lat::Lattice; title="")
     return p, ms
 end
 """
-    find_marker_size(lat::Lattice; ms_scale=80.0) -> Float64
+    find_marker_size(lat::AbstractLattice; ms_scale=80.0) -> Float64
 
 Heuristically determines an appropriate marker size for plotting sites.
 
@@ -29,24 +29,26 @@ It calculates the minimum distance between connected sites (bond length) and sca
 relative to the total area of the lattice. This ensures markers don't overlap too much
 on dense lattices or appear too small on sparse ones.
 """
-function find_marker_size(lat::Lattice; ms_scale=80.0)
+function find_marker_size(lat::AbstractLattice; ms_scale=80.0)
+    all_bonds = collect(bonds(lat))
     min_dist = 0.0
-    if isempty(lat.bonds)
+    if isempty(all_bonds)
         min_dist = 1.0
     else
         min_dist = minimum([
-            norm(lat.positions[b.src] - lat.positions[b.dst]) for b in lat.bonds
+            norm(position(lat, b.i) - position(lat, b.j)) for b in all_bonds
         ])
     end
-    xs = [p[1] for p in lat.positions]
-    ys = [p[2] for p in lat.positions]
+    N = num_sites(lat)
+    xs = [position(lat, i)[1] for i in 1:N]
+    ys = [position(lat, i)[2] for i in 1:N]
     area = [(maximum(xs) - minimum(xs)), (maximum(ys) - minimum(ys))]
     scaling = min_dist / norm(area)
     marker_size = ms_scale * scaling
     return marker_size
 end
 """
-    visualize_bonds(p, lat::Lattice)
+    visualize_bonds(p, lat::AbstractLattice)
 
 Draws the lattice connections (edges) on the plot `p`.
 
@@ -54,12 +56,13 @@ Draws the lattice connections (edges) on the plot `p`.
 It includes a threshold check (`1.5 * max_basis_norm`) to prevent drawing lines across the entire plot
 when sites are connected via periodic boundaries. Bonds longer than this threshold are skipped.
 """
-function visualize_bonds(p, lat::Lattice)
-    threhold = 1.5 * maximum(norm.(lat.unit_cell.basis))
+function visualize_bonds(p, lat::AbstractLattice)
+    A = basis_vectors(lat)
+    threhold = 1.5 * max(norm(A[:, 1]), norm(A[:, 2]))
     seg_x, seg_y = Float64[], Float64[]
-    for bond in lat.bonds
-        src_pos = lat.positions[bond.src]
-        dst_pos = lat.positions[bond.dst]
+    for bond in bonds(lat)
+        src_pos = position(lat, bond.i)
+        dst_pos = position(lat, bond.j)
         if norm(dst_pos - src_pos) < threhold
             push!(seg_x, src_pos[1], dst_pos[1], NaN)
             push!(seg_y, src_pos[2], dst_pos[2], NaN)
@@ -78,13 +81,13 @@ Plots the current state of the spins onto the existing plot `p`.
 """
 function plot_state!(
     p::Plots.Plot,
-    lat::Lattice,
+    lat::AbstractLattice,
     grids::AbstractVector,
     model::AbstractModel;
     marker_size=10.0,
 )
-    xs = [pos[1] for pos in lat.positions]
-    ys = [pos[2] for pos in lat.positions]
+    xs = [position(lat, i)[1] for i in 1:num_sites(lat)]
+    ys = [position(lat, i)[2] for i in 1:num_sites(lat)]
     colors = get_state_colors(model, grids)
     return scatter!(p, xs, ys; ms=marker_size, mc=colors, markerstrokewidth=0, label="")
 end
@@ -115,10 +118,10 @@ Instead of colored dots, it draws arrows (quivers) at each site.
 The direction of the arrow corresponds to the angle \\theta of the spin.
 """
 function plot_state!(
-    p::Plots.Plot, lat::Lattice, grids::AbstractVector, model::XYModel; marker_size=10.0
+    p::Plots.Plot, lat::AbstractLattice, grids::AbstractVector, model::XYModel; marker_size=10.0
 )
-    xs = [pos[1] for pos in lat.positions]
-    ys = [pos[2] for pos in lat.positions]
+    xs = [position(lat, i)[1] for i in 1:num_sites(lat)]
+    ys = [position(lat, i)[2] for i in 1:num_sites(lat)]
     u = cos.(grids) .* (marker_size * 0.01)
     v = sin.(grids) .* (marker_size * 0.01)
     return quiver!(p, xs, ys; quiver=(u, v), color=:black)

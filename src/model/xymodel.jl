@@ -13,14 +13,14 @@ export XYModel
 
 function local_hamiltonian(
     grids::AbstractVector{Float64},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::XYModel,
     site::Int;
     val::Float64=grids[site],
     kwargs...,
 )
     energy = 0.0
-    for neighbor in lat.nearest_neighbors[site]
+    for neighbor in neighbors(lat, site)
         energy -= model.J * cos(val - grids[neighbor])
     end
     return energy
@@ -35,7 +35,7 @@ function propose(
     rng::AbstractRNG,
     alg::UniformShift,
     grids::AbstractVector{Float64},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::XYModel,
     site::Int;
     kwargs...,

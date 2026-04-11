@@ -11,7 +11,7 @@ Run a Monte Carlo simulation with the specified parameters, updating the spin co
 # Arguments
 - `rng::AbstractRNG`: random number generator for stochastic processes.
 - `grids::AbstractVector{T}`: it represents the spin configuration of the lattice, where `T` is the type of spin (e.g., `Int` for Ising spins).
-- `lat::Lattice`: lattice structure (topology, size, adjacency information).
+- `lat::AbstractLattice`: lattice structure (topology, size, adjacency information).
 - `model::AbstractModel{T}`: definition of the physical model (Ising, Potts, XY, etc.).
 - `alg::UpdateAlgorithm`: update algorithm (e.g., `LocalUpdate`).
 - `observers::AbstractVector`: list of `AbstractObserver`s for measurements.
@@ -29,7 +29,7 @@ Run a Monte Carlo simulation with the specified parameters, updating the spin co
 function run!(
     rng::AbstractRNG,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm,
     observers::AbstractVector{<:AbstractObserver};
@@ -60,7 +60,7 @@ end
 function run(
     rng::AbstractRNG,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm,
     observers::AbstractVector{<:AbstractObserver};
@@ -88,7 +88,7 @@ function propose(
     rng::AbstractRNG,
     alg::ProposalMethod,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     site::Int,
 ) where {T}
@@ -110,7 +110,7 @@ A virtual value `val` can be specified instead of the current state `grids[site]
 """
 function local_hamiltonian(
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     site::Int;
     val::T=grids[site],
@@ -130,10 +130,10 @@ The default implementation sums up [`local_hamiltonian`](@ref) for all sites and
     In such cases, please override this function for the specific model.
 """
 function total_energy(
-    grids::AbstractVector{T}, lat::Lattice, model::AbstractModel{T}
+    grids::AbstractVector{T}, lat::AbstractLattice, model::AbstractModel{T}
 ) where {T}
     energy = 0.0
-    for site in 1:(lat.N)
+    for site in 1:(num_sites(lat))
         energy += local_hamiltonian(grids, lat, model, site)
     end
     return energy / 2.0
@@ -150,7 +150,7 @@ Instead of recalculating the total energy, it considers only the changed sites a
 """
 function calculate_diff_energy(
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     changes::Tuple{LocalChange{T},LocalChange{T},Vararg{LocalChange{T}}},
 ) where {T}
@@ -168,7 +168,7 @@ The specific process is dispatched to the type of `alg` (e.g., [`LocalUpdateAlgo
 function update_step!(
     rng::AbstractRNG,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm;
     kbT::Float64=1.0,
@@ -189,7 +189,7 @@ function process_site_selection!(
     rng::AbstractRNG,
     S::SiteSelectionMethod, # dispatch target
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm;
     kbT::Float64=1.0,
@@ -226,7 +226,7 @@ This function is called periodically within the [`run!`](@ref) loop.
 function observe!(
     obs::AbstractObserver,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     step::Int;
     kwargs...,

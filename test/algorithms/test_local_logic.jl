@@ -16,7 +16,7 @@ function Lattice2DMonteCarlo.propose(
     rng::AbstractRNG,
     alg::MockProposal,
     grids::AbstractVector{Int}, # <--- gridsがここに来た
-    lat::Lattice,
+    lat::AbstractLattice,
     model::MockLogicModel,
     site::Int,
 )
@@ -26,7 +26,7 @@ end
 # 【変更】引数順序: grids, lat, model, site
 function Lattice2DMonteCarlo.local_hamiltonian(
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::MockLogicModel, # <--- modelがsiteの前に来た
     site::Int;
     val::Int=grids[site],
@@ -75,7 +75,7 @@ struct OrderCheckModel <: AbstractModel{Int} end
             rng::AbstractRNG,
             site::Int,
             grids::AbstractVector{Int},
-            lat::Lattice,
+            lat::AbstractLattice,
             model::OrderCheckModel,
             alg::LocalUpdate;
             kbT::Float64=1.0,
