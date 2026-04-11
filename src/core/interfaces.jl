@@ -152,7 +152,7 @@ function calculate_diff_energy(
     grids::AbstractVector{T},
     lat::Lattice,
     model::AbstractModel{T},
-    changes::Tuple{LocalChange{T},LocalChange{T}, Vararg{LocalChange{T}}},
+    changes::Tuple{LocalChange{T},LocalChange{T},Vararg{LocalChange{T}}},
 ) where {T}
     return error(
         "Generic calculate_diff_energy is not implemented for multi-site updates on (typeof(model)).",
