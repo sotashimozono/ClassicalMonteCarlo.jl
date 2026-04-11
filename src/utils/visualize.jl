@@ -8,11 +8,7 @@ Initializes the plotting environment for a lattice simulation.
 - A calculated `marker_size` optimized for the lattice scale.
 """
 const p_init = plot(;
-    aspect_ratio=:equal,
-    grid=false,
-    axis=false,
-    ticks=false,
-    legend=:bottomright,
+    aspect_ratio=:equal, grid=false, axis=false, ticks=false, legend=:bottomright
 )
 
 function plot_setup(lat::Lattice; title="")
@@ -119,11 +115,7 @@ Instead of colored dots, it draws arrows (quivers) at each site.
 The direction of the arrow corresponds to the angle \\theta of the spin.
 """
 function plot_state!(
-    p::Plots.Plot,
-    lat::Lattice,
-    grids::AbstractVector,
-    model::XYModel;
-    marker_size=10.0,
+    p::Plots.Plot, lat::Lattice, grids::AbstractVector, model::XYModel; marker_size=10.0
 )
     xs = [pos[1] for pos in lat.positions]
     ys = [pos[2] for pos in lat.positions]

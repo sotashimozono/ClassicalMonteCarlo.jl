@@ -42,7 +42,6 @@ function Lattice2DMonteCarlo.local_hamiltonian(
     return float(val)
 end
 
-
 @testset "Core Interfaces & Dispatch" begin
     rng = MersenneTwister(1234)
     Lx, Ly = 10, 10
@@ -65,14 +64,7 @@ end
         observer = MockObserver(obs_interval)
 
         run!(
-            rng,
-            grids,
-            lat,
-            model,
-            alg,
-            AbstractObserver[observer];
-            kbT=kbT,
-            nsteps=nsteps,
+            rng, grids, lat, model, alg, AbstractObserver[observer]; kbT=kbT, nsteps=nsteps
         )
 
         expected_calls = 1 + (nsteps ÷ obs_interval)

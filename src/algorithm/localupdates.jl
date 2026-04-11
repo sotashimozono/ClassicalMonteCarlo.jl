@@ -17,7 +17,7 @@ function process_site_selection!(
     lat::Lattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm;
-    kwargs...
+    kwargs...,
 ) where {T}
     for site in 1:(lat.N)
         update_single_site!(rng, site, grids, lat, model, alg; kwargs...)
@@ -31,7 +31,7 @@ function process_site_selection!(
     lat::Lattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm;
-    kwargs...
+    kwargs...,
 ) where {T}
     for _ in 1:(lat.N)
         site = rand(rng, 1:(lat.N))
@@ -54,7 +54,7 @@ function calculate_diff_energy(
     lat::Lattice,
     model::AbstractModel{T},
     changes::Tuple{LocalChange{T}};
-    kwargs...
+    kwargs...,
 ) where {T}
     c = changes[1]
     E_old = local_hamiltonian(grids, lat, model, c.index; val=c.old_val, kwargs...)
@@ -67,7 +67,7 @@ function calculate_diff_energy(
     lat::Lattice,
     model::AbstractModel{T},
     changes::Tuple{Vararg{LocalChange{T}}};
-    kwargs...
+    kwargs...,
 ) where {T}
     return error(
         "Generic calculate_diff_energy is not implemented for multi-site updates on (typeof(model)). Please implement a specific method in models/(typeof(model)).jl.",
@@ -83,7 +83,9 @@ Determines if a proposed move with energy difference `dE` should be accepted at 
 - `::Metropolis`: Accepts if r < e^{-\\Delta E / k_B T}. Always accepts if \\Delta E \\leq 0.
 - `::Glauber`: Accepts if r < \\frac{1}{1 + e^{\\Delta E / k_B T}}.
 """
-function check_acceptance(rng::AbstractRNG, ::Metropolis, dE::Float64, kbT::Float64; kwargs...)
+function check_acceptance(
+    rng::AbstractRNG, ::Metropolis, dE::Float64, kbT::Float64; kwargs...
+)
     if dE <= 0
         return true
     elseif kbT <= 0
@@ -113,7 +115,7 @@ function update_step!(
     lat::Lattice,
     model::AbstractModel{T},
     alg::LocalUpdate;
-    kwargs...
+    kwargs...,
 ) where {T}
     return process_site_selection!(rng, alg.selection, grids, lat, model, alg; kwargs...)
 end
@@ -135,7 +137,7 @@ function update_single_site!(
     model::AbstractModel{T},
     alg::LocalUpdate;
     kbT::Float64=1.0,
-    kwargs...
+    kwargs...,
 ) where {T}
     changes = propose(rng, alg.proposal, grids, lat, model, site)
 
