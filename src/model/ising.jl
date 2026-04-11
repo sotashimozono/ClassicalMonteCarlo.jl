@@ -21,14 +21,14 @@ E_{local} = -J \\sum_{k \\in \\text{neighbors}} s_{\\text{site}} s_k - h s_{\\te
 """
 function local_hamiltonian(
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::IsingModel,
     site::Int;
     val::Int=grids[site],
     kwargs...,
 )
     energy = 0.0
-    for neighbor in lat.nearest_neighbors[site]
+    for neighbor in neighbors(lat, site)
         energy -= model.J * val * grids[neighbor]
     end
     energy -= model.h * val
@@ -41,14 +41,14 @@ Calculates the total energy of the Ising system.
 Includes a factor of `1/2` for the bond sum to avoid double counting edges.
 """
 function Lattice2DMonteCarlo.total_energy(
-    grids::AbstractVector{Int}, lat::Lattice, model::IsingModel
+    grids::AbstractVector{Int}, lat::AbstractLattice, model::IsingModel
 )
     E_bond_sum = 0.0
     E_field_sum = 0.0
 
-    for site in 1:(lat.N)
+    for site in 1:(num_sites(lat))
         s = grids[site]
-        for n in lat.nearest_neighbors[site]
+        for n in neighbors(lat, site)
             E_bond_sum -= model.J * s * grids[n]
         end
         E_field_sum -= model.h * s
@@ -65,7 +65,7 @@ function propose(
     rng::AbstractRNG,
     ::SpinFlip,
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::IsingModel,
     site::Int;
     kwargs...,
@@ -79,12 +79,12 @@ function propose(
     rng::AbstractRNG,
     ::SpinExchange,
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::IsingModel,
     site1::Int;
     kwargs...,
 )
-    site2 = rand(rng, lat.nearest_neighbors[site1])
+    site2 = rand(rng, neighbors(lat, site1))
 
     v1 = grids[site1]
     v2 = grids[site2]
@@ -107,7 +107,7 @@ to prevent double-counting the interaction between `site1` and `site2`.
 """
 function Lattice2DMonteCarlo.calculate_diff_energy(
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::IsingModel,
     changes::Tuple{LocalChange{Int},LocalChange{Int}};
     kwargs...,
@@ -115,7 +115,7 @@ function Lattice2DMonteCarlo.calculate_diff_energy(
     c1 = changes[1]
     c2 = changes[2]
 
-    is_neighbor = c2.index in lat.nearest_neighbors[c1.index]
+    is_neighbor = c2.index in neighbors(lat, c1.index)
 
     dE1 =
         local_hamiltonian(grids, lat, model, c1.index; val=c1.new_val) -

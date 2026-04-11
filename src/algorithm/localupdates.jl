@@ -5,8 +5,8 @@ Iterates through lattice sites based on the specified `selection_method` (Sweep 
 and triggers single-site updates.
 
 # Methods
-- `::SequentialSweep`: Iterates from site `1` to `lat.N` in order.
-- `::RandomSiteSelection`: Performs `lat.N` updates, choosing a random site index each time.
+- `::SequentialSweep`: Iterates from site `1` to `num_sites(lat)` in order.
+- `::RandomSiteSelection`: Performs `num_sites(lat)` updates, choosing a random site index each time.
 """
 function process_site_selection! end
 
@@ -14,12 +14,12 @@ function process_site_selection!(
     rng::AbstractRNG,
     ::SequentialSweep, # dispatch target
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm;
     kwargs...,
 ) where {T}
-    for site in 1:(lat.N)
+    for site in 1:(num_sites(lat))
         update_single_site!(rng, site, grids, lat, model, alg; kwargs...)
     end
 end
@@ -28,13 +28,13 @@ function process_site_selection!(
     rng::AbstractRNG,
     ::RandomSiteSelection,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::UpdateAlgorithm;
     kwargs...,
 ) where {T}
-    for _ in 1:(lat.N)
-        site = rand(rng, 1:(lat.N))
+    for _ in 1:(num_sites(lat))
+        site = rand(rng, 1:(num_sites(lat)))
         update_single_site!(rng, site, grids, lat, model, alg; kwargs...)
     end
 end
@@ -51,7 +51,7 @@ Calculates the energy difference \\Delta E = E_{new} - E_{old} caused by the pro
 """
 function calculate_diff_energy(
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     changes::Tuple{LocalChange{T}};
     kwargs...,
@@ -64,7 +64,7 @@ end
 
 function calculate_diff_energy(
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     changes::Tuple{Vararg{LocalChange{T}}};
     kwargs...,
@@ -112,7 +112,7 @@ where N is the system size.
 function update_step!(
     rng::AbstractRNG,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::LocalUpdate;
     kwargs...,
@@ -133,7 +133,7 @@ function update_single_site!(
     rng::AbstractRNG,
     site::Int,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::AbstractModel{T},
     alg::LocalUpdate;
     kbT::Float64=1.0,

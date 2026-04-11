@@ -15,14 +15,14 @@ export PottsModel
 
 function local_hamiltonian(
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::PottsModel,
     site::Int;
     val::Int=grids[site],
     kwargs...,
 )
     energy = 0.0
-    for neighbor in lat.nearest_neighbors[site]
+    for neighbor in neighbors(lat, site)
         if val == grids[neighbor]
             energy -= model.J
         end
@@ -39,7 +39,7 @@ function propose(
     rng::AbstractRNG,
     ::SpinFlip,
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::PottsModel,
     site::Int;
     kwargs...,

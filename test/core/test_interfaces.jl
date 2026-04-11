@@ -11,7 +11,7 @@ MockObserver(interval) = MockObserver(interval, 0, -1)
 function Lattice2DMonteCarlo.update_step!(
     rng::AbstractRNG,
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::MockModel,
     alg::MockAlgorithm;
     kbT::Float64=1.0,
@@ -22,7 +22,7 @@ end
 function Lattice2DMonteCarlo.observe!(
     obs::MockObserver,
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::MockModel,
     step::Int;
     kbT::Float64=1.0,
@@ -34,7 +34,7 @@ end
 
 function Lattice2DMonteCarlo.local_hamiltonian(
     grids::AbstractVector{Int},
-    lat::Lattice,
+    lat::AbstractLattice,
     model::MockModel,
     site::Int;
     val::Int=grids[site],

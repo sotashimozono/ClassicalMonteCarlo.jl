@@ -55,7 +55,7 @@ Records the state of the system into the observer.
 function observe!(
     obs::FunctionObserver,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     kbT::Float64,
     model::AbstractModel{T},
     step::Int,
@@ -101,7 +101,7 @@ end
 function observe!(
     obs::ThermodynamicObserver,
     grids::AbstractVector{T},
-    lat::Lattice,
+    lat::AbstractLattice,
     kbT::Float64,
     model::AbstractModel{T},
     step::Int,
