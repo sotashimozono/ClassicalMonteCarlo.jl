@@ -2,7 +2,7 @@
 
 julia_version = "1.12.2"
 manifest_format = "2.0"
-project_hash = "72b9c27d71b01ccb96f26ddb0b903ea45cbe2626"
+project_hash = "fd0b013a601b8f22549119f891e6e48bbc2ad532"
 
 [[deps.AliasTables]]
 deps = ["PtrArrays", "Random"]
@@ -44,6 +44,12 @@ deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jl
 git-tree-sha1 = "d0efe2c6fdcdaa1c161d206aa8b933788397ec71"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
 version = "1.18.6+0"
+
+[[deps.ClassicalMonteCarlo]]
+deps = ["CSV", "ColorSchemes", "DataFrames", "Lattice2D", "LatticeCore", "LinearAlgebra", "Pkg", "Plots", "Random", "StaticArrays", "Statistics"]
+path = "."
+uuid = "faaa8aa3-7fc9-41cf-84af-9d0c24f78989"
+version = "0.4.0"
 
 [[deps.CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
@@ -426,12 +432,6 @@ repo-url = "https://github.com/sotashimozono/Lattice2D.jl.git"
 uuid = "e8031020-b7ff-4f1d-bee4-f79aea4cf140"
 version = "0.2.2"
 
-[[deps.ClassicalMonteCarlo]]
-deps = ["CSV", "ColorSchemes", "DataFrames", "Lattice2D", "LatticeCore", "LinearAlgebra", "Pkg", "Plots", "Random", "StaticArrays", "Statistics"]
-path = "."
-uuid = "faaa8aa3-7fc9-41cf-84af-9d0c24f78989"
-version = "0.4.0"
-
 [[deps.LatticeCore]]
 deps = ["LinearAlgebra", "StaticArrays"]
 git-tree-sha1 = "0d2df533a738f38144fe6ef14fb47d958fff59d4"
@@ -731,9 +731,9 @@ version = "1.4.0"
 
 [[deps.Qt6Base_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "Libdl", "Libglvnd_jll", "OpenSSL_jll", "Vulkan_Loader_jll", "Xorg_libSM_jll", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Xorg_libxcb_jll", "Xorg_xcb_util_cursor_jll", "Xorg_xcb_util_image_jll", "Xorg_xcb_util_keysyms_jll", "Xorg_xcb_util_renderutil_jll", "Xorg_xcb_util_wm_jll", "Zlib_jll", "libinput_jll", "xkbcommon_jll"]
-git-tree-sha1 = "d7a4bff94f42208ce3cf6bc8e4e7d1d663e7ee8b"
+git-tree-sha1 = "144895f6166994730ee7ff8113b981fc360638f1"
 uuid = "c0090381-4147-56d7-9ebc-da0b1113ec56"
-version = "6.10.2+1"
+version = "6.10.2+2"
 
 [[deps.Qt6Declarative_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Qt6Base_jll", "Qt6ShaderTools_jll", "Qt6Svg_jll"]
