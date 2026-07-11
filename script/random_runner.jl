@@ -114,7 +114,7 @@ function run_random_simulation()
         "timestamp" => timestamp,
     )
     open(json_path, "w") do f
-        JSON.print(f, meta, 4)
+        return JSON.print(f, meta, 4)
     end
     return println("Saved meta: $json_path")
 end

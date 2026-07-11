@@ -18,7 +18,7 @@ This function must be implemented for each specific `model` type.
 - `ErrorException`: If not implemented for the specific model type.
 """
 function measure_magnetization(grids, lat, model)
-    error("measure_magnetization not implemented for (typeof(model))")
+    return error("measure_magnetization not implemented for (typeof(model))")
 end
 """
     FunctionObserver(name::String, func::Function; interval::Int=100)
