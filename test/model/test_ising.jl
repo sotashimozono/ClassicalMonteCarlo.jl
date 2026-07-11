@@ -1,6 +1,6 @@
 using Test
 using Random
-using Lattice2DMonteCarlo
+using ClassicalMonteCarlo
 using Lattice2D
 
 @testset "Ising Model Tests" begin

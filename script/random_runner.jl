@@ -1,4 +1,4 @@
-using Lattice2DMonteCarlo
+using ClassicalMonteCarlo
 using Lattice2D
 using Random
 using Dates
@@ -86,12 +86,12 @@ function run_random_simulation()
     T_str = "T$(round(kbT, digits=3))"
     timestamp = Dates.format(now(), "MMdd_HHmm")
 
-    base_name = Lattice2DMonteCarlo.get_file_base(lat, model, alg)
+    base_name = ClassicalMonteCarlo.get_file_base(lat, model, alg)
     filename = "$(base_name)_$(T_str)_$(timestamp)"
 
     # 保存先 (GitHub Actionsのワークスペース内)
     gallery_dir = joinpath(
-        pkgdir(Lattice2DMonteCarlo), "gallery", string(nameof(typeof(model)))
+        pkgdir(ClassicalMonteCarlo), "gallery", string(nameof(typeof(model)))
     )
     mkpath(gallery_dir)
 
@@ -114,7 +114,7 @@ function run_random_simulation()
         "timestamp" => timestamp,
     )
     open(json_path, "w") do f
-        JSON.print(f, meta, 4)
+        return JSON.print(f, meta, 4)
     end
     return println("Saved meta: $json_path")
 end

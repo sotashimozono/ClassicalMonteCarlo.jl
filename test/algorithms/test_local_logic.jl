@@ -1,6 +1,6 @@
 using Test
 using Random
-using Lattice2DMonteCarlo
+using ClassicalMonteCarlo
 using Lattice2D
 
 # ==============================================================================
@@ -12,7 +12,7 @@ struct MockLogicModel <: AbstractModel{Int} end
 struct MockProposal <: ProposalMethod end
 
 # 【変更】引数順序: alg, grids, lat, model, site
-function Lattice2DMonteCarlo.propose(
+function ClassicalMonteCarlo.propose(
     rng::AbstractRNG,
     alg::MockProposal,
     grids::AbstractVector{Int}, # <--- gridsがここに来た
@@ -24,7 +24,7 @@ function Lattice2DMonteCarlo.propose(
 end
 
 # 【変更】引数順序: grids, lat, model, site
-function Lattice2DMonteCarlo.local_hamiltonian(
+function ClassicalMonteCarlo.local_hamiltonian(
     grids::AbstractVector{Int},
     lat::AbstractLattice,
     model::MockLogicModel, # <--- modelがsiteの前に来た
@@ -71,7 +71,7 @@ struct OrderCheckModel <: AbstractModel{Int} end
         visited_sites = Int[]
 
         # 【変更】引数順序: grids, lat, model, alg; kbT
-        function Lattice2DMonteCarlo.update_single_site!(
+        function ClassicalMonteCarlo.update_single_site!(
             rng::AbstractRNG,
             site::Int,
             grids::AbstractVector{Int},

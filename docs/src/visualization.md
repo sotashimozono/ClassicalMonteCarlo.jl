@@ -4,7 +4,7 @@
 Tools for visualizing lattice states and simulation snapshots.
 
 ```@autodocs
-Modules = [Lattice2DMonteCarlo]
+Modules = [ClassicalMonteCarlo]
 Pages = [
     "utils/visualize.jl"
 ]
