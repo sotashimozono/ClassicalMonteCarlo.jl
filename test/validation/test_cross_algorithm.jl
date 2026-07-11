@@ -15,9 +15,11 @@
 # genuine independent check. When cluster updaters land, add them here.
 # ─────────────────────────────────────────────────────────────────────────────
 include(joinpath(@__DIR__, "mc_helpers.jl"))
+include(joinpath(@__DIR__, "..", "ci", "universe.jl"))
 
-@testset "cross-algorithm equilibrium agreement" begin
-    L = 8
+run_case("cross_algo_ising") do
+    @testset "cross-algorithm equilibrium agreement" begin
+        L = 8
     T = 3.0    # comfortably above Tc ≈ 2.269 ⇒ short autocorrelation, fast mixing
 
     schemes = [
@@ -45,5 +47,6 @@ include(joinpath(@__DIR__, "mc_helpers.jl"))
             @test abs(a.mE - b.mE) ≤ KSIGMA * semE
             @test abs(a.mM2 - b.mM2) ≤ KSIGMA * semM2
         end
+    end
     end
 end

@@ -10,17 +10,27 @@
 # QAtlas path is exercised on every PR.
 # ─────────────────────────────────────────────────────────────────────────────
 include(joinpath(@__DIR__, "mc_helpers.jl"))
-using QAtlas
+include(joinpath(@__DIR__, "..", "ci", "universe.jl"))
 
 const CMC_FULL = get(ENV, "CMC_TEST_FULL", "0") == "1"
-if !CMC_FULL
-    @info "test_qatlas_corroboration: running LIGHT lane (set CMC_TEST_FULL=1 for the heavy large-L sweeps)"
-end
 
-@testset "QAtlas corroboration (layer B)" begin
-    Tc = QAtlas.fetch(IsingSquare(), CriticalTemperature())
+# All four legs of this file are QAtlas-corroboration cases; a shard that
+# selects none of them never loads QAtlas at all.
+const _QATLAS_CASES =
+    ("qatlas_oracle_sanity", "qatlas_yang_mag", "qatlas_binder_crossing", "qatlas_beta_consistency")
 
-    @testset "oracle sanity (exact, always run)" begin
+if any(case_selected, _QATLAS_CASES)
+    using QAtlas
+
+    if !CMC_FULL
+        @info "test_qatlas_corroboration: running LIGHT lane (set CMC_TEST_FULL=1 for the heavy large-L sweeps)"
+    end
+
+    @testset "QAtlas corroboration (layer B)" begin
+        Tc = QAtlas.fetch(IsingSquare(), CriticalTemperature())
+
+        run_case("qatlas_oracle_sanity") do
+            @testset "oracle sanity (exact, always run)" begin
         # QAtlas Tc must equal the Onsager closed form 2/log(1+√2).
         @test Tc ≈ 2 / log(1 + sqrt(2)) atol = 1e-12
         # Critical exponents NamedTuple; boundary-condition tag is Infinite()
@@ -28,9 +38,11 @@ end
         ex = QAtlas.fetch(IsingSquare(), CriticalExponents(), QAtlas.Infinite())
         @test float(ex.β) == 0.125            # β = 1//8, Onsager universality
         @test float(ex.ν) == 1.0
-    end
+            end
+        end
 
-    @testset "Yang spontaneous magnetization vs MC (below Tc)" begin
+        run_case("qatlas_yang_mag") do
+            @testset "Yang spontaneous magnetization vs MC (below Tc)" begin
         # Finite-lattice ⟨|M|⟩ is biased slightly ABOVE the TDL Yang value
         # (|M| cannot vanish on a finite system); well below Tc this bias is
         # tiny. Measured L=8/T=1.8 bias ≈ +9e-4, L=16 ≈ +1e-4 — so atol below
@@ -48,9 +60,11 @@ end
                 @test est.mAbsM ≈ M_yang atol = 0.02
             end
         end
-    end
+            end
+        end
 
-    @testset "Onsager Tc via Binder-cumulant crossing" begin
+        run_case("qatlas_binder_crossing") do
+            @testset "Onsager Tc via Binder-cumulant crossing" begin
         # U₄(L) curves for two sizes cross at ≈ Tc. Below Tc the larger lattice
         # is more ordered (higher U₄ ⇒ D = U₄(L2) − U₄(L1) > 0); above Tc the
         # ordering collapses fastest on the larger lattice (D < 0). The sign
@@ -79,9 +93,11 @@ end
             # Sharper localization on the strong side in the heavy lane.
             @test Dhi < -0.05
         end
-    end
+            end
+        end
 
-    @testset "critical exponent β consistency" begin
+        run_case("qatlas_beta_consistency") do
+            @testset "critical exponent β consistency" begin
         # Oracle value (exact rational) — exercised every PR.
         ex = QAtlas.fetch(IsingSquare(), CriticalExponents(), QAtlas.Infinite())
         @test float(ex.β) ≈ 1 / 8
@@ -100,5 +116,7 @@ end
         @test y_lo > y_hi             # Yang closed form: same monotonicity
         @test m_hi ≈ y_hi atol = 0.02  # and MC tracks the Yang magnitude
         @test m_lo ≈ y_lo atol = 0.02
+            end
+        end
     end
 end

@@ -11,6 +11,17 @@ mkpath.(values(PATHS))
 
 const dirs = ["core", "algorithms", "model", "utils", "validation"]
 
+# ── CI sharding ──────────────────────────────────────────────────────────────
+# The heavy physics-validation legs (test/validation/) are split across CI
+# shards keyed by (model, parameter): each validation file `include`s
+# test/ci/universe.jl and wraps its @testset legs in `run_case(<id>) do … end`,
+# which run only when the case id is selected by env CMC_TEST_CASES (a shard
+# runs a subset; unset ⇒ ALL, so a local `Pkg.test()` runs everything).
+#
+# The cheap mechanical unit dirs (core/algorithms/model/utils) are NOT sharded:
+# they always run on every shard.  They are fast, and running them everywhere
+# keeps each shard self-contained (an empty-`cases` shard still exercises the
+# unit suite and passes).  Only the expensive validation MC sweeps are gated.
 @testset "tests" begin
     test_args = copy(ARGS)
     println("Passed arguments ARGS = $(test_args) to tests.")

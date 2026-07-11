@@ -7,6 +7,7 @@
 #            (⟨(Σs)²⟩ = N for independent ±1 spins ⇒ ⟨(Σs/N)²⟩ = 1/N).
 # ─────────────────────────────────────────────────────────────────────────────
 include(joinpath(@__DIR__, "mc_helpers.jl"))
+include(joinpath(@__DIR__, "..", "ci", "universe.jl"))
 
 @testset "physical limits" begin
     L = 8
@@ -14,7 +15,8 @@ include(joinpath(@__DIR__, "mc_helpers.jl"))
     N = lat.N
     model = IsingModel(; J=1.0, h=0.0)
 
-    @testset "T → 0 ground state" begin
+    run_case("limits_ising_lowT") do
+        @testset "T → 0 ground state" begin
         # Closed-form endpoint, independent of MC: the ordered config has
         # E/site = −2J exactly (each of 4 PBC bonds per site shared by 2 sites).
         ordered = ones(Int, N)
@@ -31,9 +33,11 @@ include(joinpath(@__DIR__, "mc_helpers.jl"))
         d = get_thermodynamics(obs, 0.1, N, model)
         @test d["Energy"] ≈ -2.0 atol = 1e-9
         @test d["Magnetization"] ≈ 1.0 atol = 1e-9
+        end
     end
 
-    @testset "T → ∞ paramagnet" begin
+    run_case("limits_ising_highT") do
+        @testset "T → ∞ paramagnet" begin
         Thot = 1.0e6
         alg = LocalUpdate(; rule=Metropolis(), selection=RandomSiteSelection())
         est = mc_estimate(L, Thot, alg; R=8, burn=500, nsteps=3000, seed0=6000)
@@ -44,5 +48,6 @@ include(joinpath(@__DIR__, "mc_helpers.jl"))
 
         # ⟨M²⟩ (density) → 1/N.  Check within k·SEM of the exact infinite-T value.
         @test abs(est.mM2 - 1 / N) ≤ KSIGMA * est.semM2
+        end
     end
 end

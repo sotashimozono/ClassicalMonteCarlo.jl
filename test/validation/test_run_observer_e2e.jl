@@ -10,9 +10,11 @@
 # THROWS on the unfixed code and only passes once dispatch is repaired.
 # ─────────────────────────────────────────────────────────────────────────────
 include(joinpath(@__DIR__, "mc_helpers.jl"))
+include(joinpath(@__DIR__, "..", "ci", "universe.jl"))
 
-@testset "run! + ThermodynamicObserver end-to-end (dispatch regression)" begin
-    L = 8
+run_case("run_observer_e2e") do
+    @testset "run! + ThermodynamicObserver end-to-end (dispatch regression)" begin
+        L = 8
     lat = build_lattice(Square, L, L)
     N = lat.N
     model = IsingModel(; J=1.0, h=0.0)
@@ -58,6 +60,7 @@ include(joinpath(@__DIR__, "mc_helpers.jl"))
         kbT=T,
         nsteps=100,
     )
-    @test length(fobs.history) > 0
-    @test all(isfinite, fobs.history)
+        @test length(fobs.history) > 0
+        @test all(isfinite, fobs.history)
+    end
 end

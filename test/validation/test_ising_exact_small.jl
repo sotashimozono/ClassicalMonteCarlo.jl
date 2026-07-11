@@ -9,7 +9,13 @@
 #      where SEM comes from independent chains (no hand-tuned tolerance).
 # ─────────────────────────────────────────────────────────────────────────────
 include(joinpath(@__DIR__, "mc_helpers.jl"))
-using QAtlas
+include(joinpath(@__DIR__, "..", "ci", "universe.jl"))
+
+# QAtlas is only needed by the exact-Z cross-check leg; a shard that does not
+# select it never pays the QAtlas precompile/load cost.
+if case_selected("exact_ising_bruteZ")
+    using QAtlas
+end
 
 @testset "Ising exact-small (engine self-test + QAtlas Z cross-check)" begin
 
@@ -17,7 +23,8 @@ using QAtlas
     # `boundary = PeriodicAxis()`), which is exactly QAtlas's torus convention
     # for the finite-lattice partition function. Verified below at rtol 1e-8.
 
-    @testset "brute-force Z == QAtlas exact Z" begin
+    run_case("exact_ising_bruteZ") do
+        @testset "brute-force Z == QAtlas exact Z" begin
         # Lx,Ly ≥ 3 count each physical bond once; the 2×2 case wraps a
         # length-2 ring (each such bond enters twice), and Lattice2D's
         # `neighbors` returns the wrapped site twice as well — the same
@@ -33,9 +40,11 @@ using QAtlas
             # convention or QAtlas bug.
             @test Z_brute ≈ Z_qatlas rtol = 1e-8
         end
+        end
     end
 
-    @testset "MC == brute-force exact within $(KSIGMA)·SEM" begin
+    run_case("exact_ising_mc") do
+        @testset "MC == brute-force exact within $(KSIGMA)·SEM" begin
         L = 4                       # 4×4 = 16 sites: 2^16 exact states
         # Two acceptance rules exercised (the package ships no cluster updater,
         # so Wolff/Swendsen-Wang from the task spec are substituted by the two
@@ -53,6 +62,7 @@ using QAtlas
                     @test abs(est.mM2 - ex.M2) ≤ KSIGMA * est.semM2
                 end
             end
+        end
         end
     end
 end
