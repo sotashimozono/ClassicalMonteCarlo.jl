@@ -180,7 +180,7 @@ if !isdefined(Main, :CMC_VALIDATION_UNIVERSE_LOADED)
             mkpath(dir)
             sid = get(ENV, "CMC_SHARD_ID", string(getpid()))
             open(joinpath(dir, "timings-$(sid).tsv"), "a") do io
-                println(io, string(id), '\t', seconds)
+                return println(io, string(id), '\t', seconds)
             end
         catch e
             @warn "CMC timing emit failed (non-fatal)" id exception = (e,)
