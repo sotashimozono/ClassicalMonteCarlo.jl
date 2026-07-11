@@ -43,7 +43,7 @@
         grids = ones(Int, N)
 
         obs = FunctionObserver("Site1", (g, l, m) -> float(g[1]))
-        observe!(obs, grids, lat, kbT, model, 100)
+        observe!(obs, grids, lat, model, 100; kbT=kbT)
         @test length(obs.steps) == 1
         @test obs.history[1] == 1.0
 
@@ -59,10 +59,10 @@
             obs = ThermodynamicObserver()
 
             grids1 = ones(Int, N)
-            observe!(obs, grids1, lat, kbT, model, 1)
+            observe!(obs, grids1, lat, model, 1; kbT=kbT)
 
             grids2 = -ones(Int, N)
-            observe!(obs, grids2, lat, kbT, model, 2)
+            observe!(obs, grids2, lat, model, 2; kbT=kbT)
 
             @test obs.n_samples == 2
             @test obs.sum_M == 2.0

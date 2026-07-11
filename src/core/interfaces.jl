@@ -214,7 +214,7 @@ function check_acceptance(rng::AbstractRNG, rule::AcceptanceRule, dE::Float64; k
 end
 export check_acceptance
 """
-    observe!(obs, grids, lat, kbT, model, step)
+    observe!(obs, grids, lat, model, step; kbT=1.0, kwargs...)
 
 Measures and records physical quantities from the current state.
 This function is called periodically within the [`run!`](@ref) loop.
@@ -222,6 +222,10 @@ This function is called periodically within the [`run!`](@ref) loop.
 # Arguments
 - `obs::AbstractObserver`: The specific observer instance (e.g., [`FunctionObserver`](@ref)).
 - `step::Int`: The current Monte Carlo step number.
+
+# Keyword Arguments
+- `kbT::Float64`: temperature, forwarded from [`run!`](@ref); ignored by observers
+  that do not need it (used later in [`get_thermodynamics`](@ref)).
 """
 function observe!(
     obs::AbstractObserver,

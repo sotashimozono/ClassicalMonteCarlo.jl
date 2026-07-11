@@ -1,6 +1,6 @@
 name = "ClassicalMonteCarlo"
 uuid = "faaa8aa3-7fc9-41cf-84af-9d0c24f78989"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["sota <shimozono-sota631@g.ecc.u-tokyo.ac.jp>"]
 
 [deps]
@@ -19,6 +19,7 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 [sources]
 Lattice2D = {url = "https://github.com/sotashimozono/Lattice2D.jl.git", rev = "v0.2.2"}
 LatticeCore = {url = "https://github.com/sotashimozono/LatticeCore.jl.git", rev = "v0.7.3"}
+QAtlas = {url = "https://github.com/sotashimozono/QAtlas.jl.git", rev = "v0.25.0"}
 
 [compat]
 CSV = "0.10"
@@ -35,7 +36,8 @@ Statistics = "1"
 julia = "1.11"
 
 [extras]
+QAtlas = "2bd488d2-d3e6-46ee-afb3-5515643db0c7"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Test", "QAtlas"]

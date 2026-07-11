@@ -45,20 +45,26 @@ function FunctionObserver(name::String, func::Function; interval::Int=100)
     return FunctionObserver(name, func, interval, Int[], Float64[])
 end
 """
-    observe!(obs, grids, lat, kbT, model, step)
+    observe!(obs, grids, lat, model, step; kbT=1.0, kwargs...)
 
 Records the state of the system into the observer.
 
 - For `FunctionObserver`: Executes the user-defined measurement function.
 - For `ThermodynamicObserver`: Accumulates Energy (E, E^2) and Magnetization (M, M^2, M^4) statistics for post-processing.
+
+The signature matches the call convention used inside [`run!`](@ref):
+five positional arguments `(obs, grids, lat, model, step)` plus `kbT` and any
+other algorithm keyword arguments. `kbT` is accepted-and-ignored here (it is
+only consumed later in [`get_thermodynamics`](@ref)).
 """
 function observe!(
     obs::FunctionObserver,
     grids::AbstractVector{T},
     lat::AbstractLattice,
-    kbT::Float64,
     model::AbstractModel{T},
-    step::Int,
+    step::Int;
+    kbT::Float64=1.0,
+    kwargs...,
 ) where {T}
     val = obs.measure_func(grids, lat, model)
     push!(obs.steps, step)
@@ -102,9 +108,10 @@ function observe!(
     obs::ThermodynamicObserver,
     grids::AbstractVector{T},
     lat::AbstractLattice,
-    kbT::Float64,
     model::AbstractModel{T},
-    step::Int,
+    step::Int;
+    kbT::Float64=1.0,
+    kwargs...,
 ) where {T}
     E = measure_energy(grids, lat, model)
     M = measure_magnetization(grids, lat, model)
