@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: 💬 Discussions
-    url: https://github.com/sotashimozono/Lattice2DMonteCarlo.jl/discussions
+    url: https://github.com/sotashimozono/ClassicalMonteCarlo.jl/discussions
     about: Use `Discussions` for questions and general discussions

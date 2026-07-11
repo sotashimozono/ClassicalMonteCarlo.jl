@@ -1,13 +1,13 @@
 using Documenter
-using Lattice2DMonteCarlo
+using ClassicalMonteCarlo
 
 makedocs(;
-    sitename="Lattice2DMonteCarlo.jl",
-    modules=[Lattice2DMonteCarlo],
+    sitename="ClassicalMonteCarlo.jl",
+    modules=[ClassicalMonteCarlo],
     authors="Sota Shimozono",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://sotashimozono.github.io/Lattice2DMonteCarlo.jl",
+        canonical="https://sotashimozono.github.io/ClassicalMonteCarlo.jl",
         edit_link="main",
         assets=String[],
     ),
@@ -23,4 +23,4 @@ makedocs(;
     ],
 )
 
-deploydocs(; repo="github.com/sotashimozono/Lattice2DMonteCarlo.jl.git")
+deploydocs(; repo="github.com/sotashimozono/ClassicalMonteCarlo.jl.git")

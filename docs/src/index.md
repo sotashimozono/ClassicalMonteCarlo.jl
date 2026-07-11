@@ -1,21 +1,21 @@
-# Lattice2DMonteCarlo.jl
+# ClassicalMonteCarlo.jl
 
 Overview of the 2D Lattice Monte Carlo simulation package.
 
-**Lattice2DMonteCarlo.jl** is an example application of the [Lattice2D](https://github.com/sotashimozono/Lattice2D.jl) package. It provides implementations of various classical lattice systems. By adhering to specific interfaces, you can easily implement custom models or update algorithms.
+**ClassicalMonteCarlo.jl** is an example application of the [Lattice2D](https://github.com/sotashimozono/Lattice2D.jl) package. It provides implementations of various classical lattice systems. By adhering to specific interfaces, you can easily implement custom models or update algorithms.
 
 ## Installation
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/sotashimozono/Lattice2DMonteCarlo.jl")
+Pkg.add(url="https://github.com/sotashimozono/ClassicalMonteCarlo.jl")
 ```
 
 ## Quick Start
 
 ```julia
 using Lattice2D
-using Lattice2DMonteCarlo
+using ClassicalMonteCarlo
 using Random
 
 # 1. Setup Lattice and Model

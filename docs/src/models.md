@@ -3,7 +3,7 @@
 Implementations of various statistical mechanics models.
 
 ```@autodocs
-Modules = [Lattice2DMonteCarlo]
+Modules = [ClassicalMonteCarlo]
 Pages = [
     "model/ising.jl",
     "model/pottsmodel.jl",

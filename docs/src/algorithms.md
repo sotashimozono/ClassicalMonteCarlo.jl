@@ -3,7 +3,7 @@
 Monte Carlo update algorithms and acceptance rules.
 
 ```@autodocs
-Modules = [Lattice2DMonteCarlo]
+Modules = [ClassicalMonteCarlo]
 Pages = [
     "algorithm/localupdates.jl",
     # "algorithm/swendsen-wang.jl",

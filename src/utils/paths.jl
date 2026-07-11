@@ -1,4 +1,4 @@
-const PATH_BASE = pkgdir(Lattice2DMonteCarlo)
+const PATH_BASE = pkgdir(ClassicalMonteCarlo)
 const PATHS_DATA = joinpath(PATH_BASE, "data")
 const PATHS_FIGURES = joinpath(PATH_BASE, "docs", "src", "assets")
 

@@ -40,7 +40,7 @@ end
 Calculates the total energy of the Ising system.
 Includes a factor of `1/2` for the bond sum to avoid double counting edges.
 """
-function Lattice2DMonteCarlo.total_energy(
+function ClassicalMonteCarlo.total_energy(
     grids::AbstractVector{Int}, lat::AbstractLattice, model::IsingModel
 )
     E_bond_sum = 0.0
@@ -105,7 +105,7 @@ It sums the local energy differences of both sites.
 **Crucially**, if the swapped sites are nearest neighbors, it subtracts the bond energy correction
 to prevent double-counting the interaction between `site1` and `site2`.
 """
-function Lattice2DMonteCarlo.calculate_diff_energy(
+function ClassicalMonteCarlo.calculate_diff_energy(
     grids::AbstractVector{Int},
     lat::AbstractLattice,
     model::IsingModel,

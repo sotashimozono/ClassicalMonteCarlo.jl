@@ -8,7 +8,7 @@ mutable struct MockObserver <: AbstractObserver
 end
 MockObserver(interval) = MockObserver(interval, 0, -1)
 
-function Lattice2DMonteCarlo.update_step!(
+function ClassicalMonteCarlo.update_step!(
     rng::AbstractRNG,
     grids::AbstractVector{Int},
     lat::AbstractLattice,
@@ -19,7 +19,7 @@ function Lattice2DMonteCarlo.update_step!(
     return nothing
 end
 
-function Lattice2DMonteCarlo.observe!(
+function ClassicalMonteCarlo.observe!(
     obs::MockObserver,
     grids::AbstractVector{Int},
     lat::AbstractLattice,
@@ -32,7 +32,7 @@ function Lattice2DMonteCarlo.observe!(
     return nothing
 end
 
-function Lattice2DMonteCarlo.local_hamiltonian(
+function ClassicalMonteCarlo.local_hamiltonian(
     grids::AbstractVector{Int},
     lat::AbstractLattice,
     model::MockModel,

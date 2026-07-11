@@ -2,7 +2,7 @@ using Test
 using Plots
 using ColorSchemes
 using LinearAlgebra
-using Lattice2DMonteCarlo
+using ClassicalMonteCarlo
 using Lattice2D
 
 ENV["GKSwstype"] = "100"
@@ -25,7 +25,7 @@ ENV["GKSwstype"] = "100"
         model = IsingModel()
         grids = rand([-1, 1], N)
 
-        colors = Lattice2DMonteCarlo.get_state_colors(model, grids)
+        colors = ClassicalMonteCarlo.get_state_colors(model, grids)
         @test length(colors) == N
         @test colors[1] in [:red, :blue]
 
@@ -38,7 +38,7 @@ ENV["GKSwstype"] = "100"
         model = PottsModel(q=q)
         grids = rand(1:q, N)
 
-        colors = Lattice2DMonteCarlo.get_state_colors(model, grids)
+        colors = ClassicalMonteCarlo.get_state_colors(model, grids)
         @test length(colors) == N
         @test colors[1] isa ColorTypes.Colorant
 

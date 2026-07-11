@@ -1,10 +1,10 @@
 ENV["GKSwstype"] = "100"
 
 using Test
-using Lattice2D, Lattice2DMonteCarlo
+using Lattice2D, ClassicalMonteCarlo
 using Random, Statistics, Plots
 
-const FIG_BASE = joinpath(pkgdir(Lattice2DMonteCarlo), "docs", "src", "assets", "figures")
+const FIG_BASE = joinpath(pkgdir(ClassicalMonteCarlo), "docs", "src", "assets", "figures")
 const FIG_LAT = joinpath(FIG_BASE, "lattice")
 const PATHS = Dict(:geometry => joinpath(FIG_LAT, "geometry"))
 mkpath.(values(PATHS))

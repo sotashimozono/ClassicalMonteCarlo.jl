@@ -1,4 +1,4 @@
-module Lattice2DMonteCarlo
+module ClassicalMonteCarlo
 
 using Lattice2D, Pkg
 using Random, Statistics, LinearAlgebra
@@ -22,4 +22,4 @@ include("algorithm/exchange-montecarlo.jl")
 include("utils/paths.jl")
 include("utils/visualize.jl")
 
-end # module Lattice2DMonteCarlo
+end # module ClassicalMonteCarlo
