@@ -1,13 +1,12 @@
 name = "ClassicalMonteCarlo"
 uuid = "faaa8aa3-7fc9-41cf-84af-9d0c24f78989"
-version = "0.7.20"
+version = "0.7.21"
 authors = ["sota <shimozono-sota631@g.ecc.u-tokyo.ac.jp>"]
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-Lattice2D = "e8031020-b7ff-4f1d-bee4-f79aea4cf140"
 LatticeCore = "84b1cbd8-bc58-4618-bc4f-b46a399f49f1"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
@@ -36,8 +35,9 @@ Statistics = "1"
 julia = "1.11"
 
 [extras]
+Lattice2D = "e8031020-b7ff-4f1d-bee4-f79aea4cf140"
 QAtlas = "2bd488d2-d3e6-46ee-afb3-5515643db0c7"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "QAtlas"]
+test = ["Test", "QAtlas", "Lattice2D"]

@@ -7,7 +7,7 @@
 
 """
     spin_correlation_function(rng, grids, lat, model, updater; kbT, sweeps,
-                              therm=sweeps÷10, interval=1, rmax=lat.Lx÷2)
+                              therm=sweeps÷10, interval=1, rmax=Lx÷2)
         -> (; r, C)
 
 Monte-Carlo estimate of C(r) = ⟨s_i s_{i+r}⟩ for r = 0…rmax, averaged over both
@@ -23,11 +23,10 @@ function spin_correlation_function(
     sweeps::Int,
     therm::Int=sweeps ÷ 10,
     interval::Int=1,
-    rmax::Int=lat.Lx ÷ 2,
+    rmax::Int=_grid_extents(lat)[1] ÷ 2,
 )
     N = num_sites(lat)
-    Lx = lat.Lx
-    Ly = lat.Ly
+    Lx, Ly = _grid_extents(lat)
     coord = [
         (round(Int, position(lat, i)[1]), round(Int, position(lat, i)[2])) for i in 1:N
     ]
