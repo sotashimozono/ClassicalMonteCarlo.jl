@@ -26,6 +26,7 @@ include("algorithm/reweighting.jl")
 include("algorithm/wham.jl")
 include("algorithm/multicanonical.jl")
 include("algorithm/annealing.jl")
+include("measurement/correlation_length.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
