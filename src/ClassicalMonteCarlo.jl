@@ -27,6 +27,7 @@ include("algorithm/wham.jl")
 include("algorithm/multicanonical.jl")
 include("algorithm/annealing.jl")
 include("measurement/correlation_length.jl")
+include("measurement/thermodynamics.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
