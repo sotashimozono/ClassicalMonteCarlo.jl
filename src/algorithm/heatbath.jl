@@ -102,3 +102,52 @@ function heatbath_sample!(
     end
     return q
 end
+
+# Continuous XY spin: the local energy is −J|h|cos(θ − φ) with local field
+# h = Σ_{n∈neighbours} e^{iθ_n}, φ = arg h, so the exact conditional is the
+# von Mises distribution  P(θ) ∝ exp(κ cos(θ − φ)),  κ = J|h|/kbT — sampled
+# rejection-free by the Best & Fisher (1979) algorithm. This is the continuous
+# analogue of the Ising/Potts heat-bath and the rejection-free counterpart of
+# the microcanonical `Overrelaxation` reflection on the same local field.
+function heatbath_sample!(
+    rng::AbstractRNG,
+    site::Int,
+    grids::AbstractVector{Float64},
+    lat::AbstractLattice,
+    model::XYModel;
+    kbT::Float64,
+)
+    hx = 0.0
+    hy = 0.0
+    for n in neighbors(lat, site)
+        hx += cos(grids[n])
+        hy += sin(grids[n])
+    end
+    h = sqrt(hx^2 + hy^2)
+    h < 1e-12 && return 2π * rand(rng)          # free spin: uniform on the circle
+    φ = atan(hy, hx)
+    if kbT <= 0                                 # T=0: align to (or anti-align from) φ
+        return model.J >= 0 ? mod2pi(φ) : mod2pi(φ + π)
+    end
+    κ = model.J * h / kbT
+    return κ >= 0 ? _sample_vonmises(rng, φ, κ) : _sample_vonmises(rng, φ + π, -κ)
+end
+
+# Best & Fisher (1979) rejection sampler for the von Mises distribution
+# P(θ) ∝ exp(κ cos(θ − μ)), κ ≥ 0. Reduces to uniform as κ → 0.
+function _sample_vonmises(rng::AbstractRNG, μ::Float64, κ::Float64)
+    κ < 1e-10 && return 2π * rand(rng)
+    a = 1.0 + sqrt(1.0 + 4.0 * κ^2)
+    b = (a - sqrt(2.0 * a)) / (2.0 * κ)
+    r = (1.0 + b^2) / (2.0 * b)
+    while true
+        z = cos(π * rand(rng))
+        f = (1.0 + r * z) / (r + z)
+        c = κ * (r - f)
+        u2 = rand(rng)
+        if c * (2.0 - c) - u2 > 0.0 || log(c / u2) + 1.0 - c >= 0.0
+            θ = sign(rand(rng) - 0.5) * acos(clamp(f, -1.0, 1.0))
+            return mod2pi(μ + θ)
+        end
+    end
+end
