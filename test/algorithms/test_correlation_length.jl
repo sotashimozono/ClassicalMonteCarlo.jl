@@ -23,23 +23,37 @@ using Lattice2D
     sy = [sin(kx * position(lat, j)[2]) for j in 1:N]
 
     function exact_S(kbT)
-        g = ones(Int, N); Z = 0.0; S0 = 0.0; Sk = 0.0; M2 = 0.0
-        for c in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        S0 = 0.0;
+        Sk = 0.0;
+        M2 = 0.0
+        for c in 0:(2 ^ N - 1)
             m = 0
             @inbounds for i in 1:N
-                g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1; m += g[i]
+                g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1;
+                m += g[i]
             end
-            E = total_energy(g, lat, model); w = exp(-E / kbT); Z += w
+            E = total_energy(g, lat, model);
+            w = exp(-E / kbT);
+            Z += w
             S0 += w * m^2 / N
-            axr = 0.0; axi = 0.0; ayr = 0.0; ayi = 0.0
+            axr = 0.0;
+            axi = 0.0;
+            ayr = 0.0;
+            ayi = 0.0
             @inbounds for j in 1:N
-                axr += g[j] * cx[j]; axi += g[j] * sx[j]
-                ayr += g[j] * cy[j]; ayi += g[j] * sy[j]
+                axr += g[j] * cx[j];
+                axi += g[j] * sx[j]
+                ayr += g[j] * cy[j];
+                ayi += g[j] * sy[j]
             end
             Sk += w * ((axr^2 + axi^2) + (ayr^2 + ayi^2)) / (2N)
             M2 += w * m^2
         end
-        S0 /= Z; Sk /= Z; M2 /= Z
+        S0 /= Z;
+        Sk /= Z;
+        M2 /= Z
         return (S0=S0, Sk=Sk, M2=M2)
     end
 
@@ -49,7 +63,15 @@ using Lattice2D
         @test isapprox(ex.S0, ex.M2 / N; rtol=1e-12)          # (2) S(0) = ⟨M²⟩/N identity
         g = rand(rng, (-1, 1), N)
         mc = measure_correlation_length(
-            rng, g, lat, model, LocalUpdate(); kbT=kbT, sweeps=500_000, therm=30_000, interval=2
+            rng,
+            g,
+            lat,
+            model,
+            LocalUpdate();
+            kbT=kbT,
+            sweeps=500_000,
+            therm=30_000,
+            interval=2,
         )
         @test isapprox(mc.S0, ex.S0; rtol=0.03)               # (1) MC S(0) vs exact
         @test isapprox(mc.Skmin, ex.Sk; rtol=0.04)            # (1) MC S(k_min) vs exact

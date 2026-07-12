@@ -17,7 +17,9 @@
 Static structure factor S(k) = (1/N)|Σ_j s_j e^{i k·r_j}|² of a single scalar
 (Ising/Potts-value) configuration at wavevector k = (kx, ky).
 """
-function structure_factor(config::AbstractVector{<:Real}, lat::AbstractLattice, kx::Real, ky::Real)
+function structure_factor(
+    config::AbstractVector{<:Real}, lat::AbstractLattice, kx::Real, ky::Real
+)
     re = 0.0
     im = 0.0
     for j in 1:num_sites(lat)
@@ -73,7 +75,11 @@ function measure_correlation_length(
         update_step!(rng, grids, lat, model, updater; kbT=kbT)
         if s > therm && (s - therm) % interval == 0
             S0 += structure_factor(grids, lat, 0.0, 0.0)
-            Sk += (structure_factor(grids, lat, kx, 0.0) + structure_factor(grids, lat, 0.0, ky)) / 2
+            Sk +=
+                (
+                    structure_factor(grids, lat, kx, 0.0) +
+                    structure_factor(grids, lat, 0.0, ky)
+                ) / 2
             n += 1
         end
     end
