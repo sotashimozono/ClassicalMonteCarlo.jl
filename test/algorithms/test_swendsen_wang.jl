@@ -15,25 +15,42 @@ using Lattice2D
     c = ClassicalMonteCarlo.get_binder_coeff(model)
 
     function exact(kbT)
-        g = ones(Int, N); Z = 0.0; sE = 0.0; sm2 = 0.0; sm4 = 0.0
-        for cfg in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        sE = 0.0;
+        sm2 = 0.0;
+        sm4 = 0.0
+        for cfg in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1
             end
-            m = measure_magnetization(g, lat, model); E = total_energy(g, lat, model)
-            w = exp(-E / kbT); Z += w
-            sE += w * E; sm2 += w * m^2; sm4 += w * m^4
+            m = measure_magnetization(g, lat, model);
+            E = total_energy(g, lat, model)
+            w = exp(-E / kbT);
+            Z += w
+            sE += w * E;
+            sm2 += w * m^2;
+            sm4 += w * m^4
         end
-        return (energy=sE / Z, m2=sm2 / Z, binder=binder_cumulant(sm2 / Z, sm4 / Z; coeff=c))
+        return (
+            energy=sE / Z, m2=sm2 / Z, binder=binder_cumulant(sm2 / Z, sm4 / Z; coeff=c)
+        )
     end
 
     sample(alg, kbT, nsw, therm) = begin
-        g = rand(rng, (-1, 1), N); sE = 0.0; sm2 = 0.0; sm4 = 0.0; n = 0
+        g = rand(rng, (-1, 1), N);
+        sE = 0.0;
+        sm2 = 0.0;
+        sm4 = 0.0;
+        n = 0
         for s in 1:nsw
             ClassicalMonteCarlo.update_step!(rng, g, lat, model, alg; kbT=kbT)
             if s > therm
                 m = measure_magnetization(g, lat, model)
-                sE += total_energy(g, lat, model); sm2 += m^2; sm4 += m^4; n += 1
+                sE += total_energy(g, lat, model);
+                sm2 += m^2;
+                sm4 += m^4;
+                n += 1
             end
         end
         (energy=sE / n, m2=sm2 / n, binder=binder_cumulant(sm2 / n, sm4 / n; coeff=c))
@@ -53,7 +70,8 @@ using Lattice2D
     # (2) no critical slowing down: τ_int(SW) ≪ τ_int(Metropolis) near Tc on 8×8
     lat8 = build_lattice(Square, 8, 8)
     magseries(alg) = begin
-        g = rand(rng, (-1, 1), num_sites(lat8)); m = Float64[]
+        g = rand(rng, (-1, 1), num_sites(lat8));
+        m = Float64[]
         for s in 1:40_000
             ClassicalMonteCarlo.update_step!(rng, g, lat8, model, alg; kbT=2.27)
             s > 5_000 && push!(m, measure_magnetization(g, lat8, model))
@@ -61,7 +79,7 @@ using Lattice2D
         m
     end
     @test integrated_autocorrelation_time(magseries(SwendsenWang())).tau <
-          integrated_autocorrelation_time(magseries(LocalUpdate())).tau
+        integrated_autocorrelation_time(magseries(LocalUpdate())).tau
 
     @test_throws ArgumentError ClassicalMonteCarlo.update_step!(
         rng, rand(rng, (-1, 1), N), lat, IsingModel(; J=-1.0), SwendsenWang(); kbT=2.0
