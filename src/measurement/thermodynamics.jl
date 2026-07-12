@@ -28,8 +28,9 @@ export binder_cumulant
 Finite-size magnetic susceptibility χ = N(⟨m²⟩ − ⟨m⟩²)/kbT from per-spin
 order-parameter moments (`m_mean` = ⟨m⟩, `m2_mean` = ⟨m²⟩, `N` = number of spins).
 """
-susceptibility(m_mean::Real, m2_mean::Real, kbT::Real, N::Int) =
-    N * (m2_mean - m_mean^2) / kbT
+function susceptibility(m_mean::Real, m2_mean::Real, kbT::Real, N::Int)
+    return N * (m2_mean - m_mean^2) / kbT
+end
 export susceptibility
 
 """
@@ -37,8 +38,9 @@ export susceptibility
 
 Per-spin specific heat C = (⟨E²⟩ − ⟨E⟩²)/(kbT²·N) from total-energy moments.
 """
-specific_heat(e_mean::Real, e2_mean::Real, kbT::Real, N::Int) =
-    (e2_mean - e_mean^2) / (kbT^2 * N)
+function specific_heat(e_mean::Real, e2_mean::Real, kbT::Real, N::Int)
+    return (e2_mean - e_mean^2) / (kbT^2 * N)
+end
 export specific_heat
 
 """

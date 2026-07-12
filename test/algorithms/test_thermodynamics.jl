@@ -15,18 +15,32 @@ using Lattice2D
     c = ClassicalMonteCarlo.get_binder_coeff(model)
 
     function exact(kbT)
-        g = ones(Int, N); Z = 0.0
-        sm = 0.0; sm2 = 0.0; sm4 = 0.0; sE = 0.0; sE2 = 0.0
-        for cfg in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0
+        sm = 0.0;
+        sm2 = 0.0;
+        sm4 = 0.0;
+        sE = 0.0;
+        sE2 = 0.0
+        for cfg in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1
             end
             m = measure_magnetization(g, lat, model)     # |Σs|/N, identical to MC
             E = total_energy(g, lat, model)
-            w = exp(-E / kbT); Z += w
-            sm += w * m; sm2 += w * m^2; sm4 += w * m^4; sE += w * E; sE2 += w * E^2
+            w = exp(-E / kbT);
+            Z += w
+            sm += w * m;
+            sm2 += w * m^2;
+            sm4 += w * m^4;
+            sE += w * E;
+            sE2 += w * E^2
         end
-        m1 = sm / Z; m2 = sm2 / Z; m4 = sm4 / Z; e1 = sE / Z; e2 = sE2 / Z
+        m1 = sm / Z;
+        m2 = sm2 / Z;
+        m4 = sm4 / Z;
+        e1 = sE / Z;
+        e2 = sE2 / Z
         return (
             binder=binder_cumulant(m2, m4; coeff=c),
             chi=susceptibility(m1, m2, kbT, N),
@@ -39,7 +53,15 @@ using Lattice2D
         ex = exact(kbT)
         g = rand(rng, (-1, 1), N)
         mc = measure_thermodynamics(
-            rng, g, lat, model, LocalUpdate(); kbT=kbT, sweeps=600_000, therm=40_000, interval=2
+            rng,
+            g,
+            lat,
+            model,
+            LocalUpdate();
+            kbT=kbT,
+            sweeps=600_000,
+            therm=40_000,
+            interval=2,
         )
         @test isapprox(mc.energy, ex.energy; rtol=0.02)
         @test isapprox(mc.binder, ex.binder; atol=0.02)
