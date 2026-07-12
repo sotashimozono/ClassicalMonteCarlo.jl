@@ -17,7 +17,7 @@ using Lattice2D
 
     Ω = Dict{Int,Int}()
     let g = ones(Int, N)
-        for c in 0:(2^N - 1)
+        for c in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1
             end
@@ -26,9 +26,12 @@ using Lattice2D
         end
     end
     exactE(kbT) = begin
-        Z = 0.0; sE = 0.0
+        Z = 0.0;
+        sE = 0.0
         for (k, ω) in Ω
-            w = ω * exp(-k / kbT); Z += w; sE += w * k
+            w = ω * exp(-k / kbT);
+            Z += w;
+            sE += w * k
         end
         return sE / Z
     end
@@ -36,7 +39,17 @@ using Lattice2D
     kbTs = [1.6, 2.1, 2.6, 3.2]
     series = map(kbTs) do T
         g = rand(rng, (-1, 1), N)
-        sample_energies(rng, g, lat, model, LocalUpdate(); kbT=T, sweeps=300_000, therm=20_000, interval=2)
+        sample_energies(
+            rng,
+            g,
+            lat,
+            model,
+            LocalUpdate();
+            kbT=T,
+            sweeps=300_000,
+            therm=20_000,
+            interval=2,
+        )
     end
 
     res = wham(series, kbTs, WHAM())

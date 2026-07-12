@@ -74,7 +74,9 @@ function wham(
             logden = _logsumexp([logn[r] + f[r] - β[r] * E for r in 1:R])
             logg[i] = logHtot[i] - logden
         end
-        newf = [-_logsumexp([logg[i] - β[r] * Evals[i] for i in eachindex(Evals)]) for r in 1:R]
+        newf = [
+            -_logsumexp([logg[i] - β[r] * Evals[i] for i in eachindex(Evals)]) for r in 1:R
+        ]
         newf .-= newf[1]                              # gauge fix f_1 = 0
         Δ = maximum(abs.(newf .- f))
         f = newf
