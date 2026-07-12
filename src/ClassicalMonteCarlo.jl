@@ -30,6 +30,7 @@ include("measurement/correlation_length.jl")
 include("measurement/thermodynamics.jl")
 include("measurement/autocorrelation.jl")
 include("measurement/correlation_function.jl")
+include("measurement/resampling.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
