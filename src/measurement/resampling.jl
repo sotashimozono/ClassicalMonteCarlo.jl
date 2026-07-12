@@ -15,7 +15,8 @@ full-sample estimate, its jackknife standard error, and the bias-corrected value
 """
 function jackknife(f, data::AbstractVector{<:AbstractVector{<:Real}})
     n = length(first(data))
-    all(length(d) == n for d in data) || throw(ArgumentError("sample vectors must be equal length"))
+    all(length(d) == n for d in data) ||
+        throw(ArgumentError("sample vectors must be equal length"))
     n >= 2 || throw(ArgumentError("need ≥ 2 samples"))
     totals = [sum(d) for d in data]
     full = f([t / n for t in totals])
@@ -41,9 +42,15 @@ Bootstrap error for `f(means)`: `n_resample` resamples with replacement, the
 standard deviation of the resampled estimates being the error. `data` as in
 [`jackknife`](@ref).
 """
-function bootstrap(rng::AbstractRNG, f, data::AbstractVector{<:AbstractVector{<:Real}}; n_resample::Int=1000)
+function bootstrap(
+    rng::AbstractRNG,
+    f,
+    data::AbstractVector{<:AbstractVector{<:Real}};
+    n_resample::Int=1000,
+)
     n = length(first(data))
-    all(length(d) == n for d in data) || throw(ArgumentError("sample vectors must be equal length"))
+    all(length(d) == n for d in data) ||
+        throw(ArgumentError("sample vectors must be equal length"))
     K = length(data)
     full = f([sum(d) / n for d in data])
     ests = Vector{Float64}(undef, n_resample)
@@ -60,7 +67,13 @@ function bootstrap(rng::AbstractRNG, f, data::AbstractVector{<:AbstractVector{<:
         ests[b] = f(copy(means))
     end
     θbar = sum(ests) / n_resample
-    return (; value=full, error=sqrt(sum(x -> (x - θbar)^2, ests) / (n_resample - 1)), samples=ests)
+    return (;
+        value=full,
+        error=sqrt(sum(x -> (x - θbar)^2, ests) / (n_resample - 1)),
+        samples=ests,
+    )
 end
-bootstrap(rng::AbstractRNG, f, data::AbstractVector{<:Real}; kwargs...) = bootstrap(rng, f, [data]; kwargs...)
+function bootstrap(rng::AbstractRNG, f, data::AbstractVector{<:Real}; kwargs...)
+    return bootstrap(rng, f, [data]; kwargs...)
+end
 export bootstrap

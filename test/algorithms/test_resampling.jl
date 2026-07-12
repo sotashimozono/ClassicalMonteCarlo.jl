@@ -33,7 +33,8 @@ using Lattice2D
     y = randn(rng, 5_000) .+ 5.0
     R(m) = m[2] / m[1]
     jkR = jackknife(R, [x, y])
-    μx = mean(x); μy = mean(y)
+    μx = mean(x);
+    μy = mean(y)
     seR = abs(μy / μx) * sqrt((std(x) / μx)^2 + (std(y) / μy)^2) / sqrt(n)
     @test isapprox(jkR.value, μy / μx; rtol=1e-12)
     @test isapprox(jkR.error, seR; rtol=0.05)
