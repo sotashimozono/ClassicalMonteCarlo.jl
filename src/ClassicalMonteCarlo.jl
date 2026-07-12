@@ -25,6 +25,7 @@ include("algorithm/exchange-montecarlo.jl")
 include("algorithm/reweighting.jl")
 include("algorithm/wham.jl")
 include("algorithm/multicanonical.jl")
+include("algorithm/annealing.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
