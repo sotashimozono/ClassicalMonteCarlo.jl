@@ -53,7 +53,14 @@ function nfold_way(
     h = model.h
     pflip(s::Int, hsum::Int) = 1.0 / (1.0 + exp(2.0 * s * (J * hsum + h) * β))
 
-    hsum(i::Int) = (t = 0; for j in neighbors(lat, i); t += grids[j]; end; t)
+    hsum(i::Int) = (
+        t=0;
+        for j in neighbors(lat, i)
+            ;
+            t += grids[j];
+        end;
+        t
+    )
 
     key_of = Vector{Tuple{Int,Int}}(undef, N)
     pos = Vector{Int}(undef, N)
