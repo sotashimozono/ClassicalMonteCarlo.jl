@@ -33,7 +33,7 @@ using Lattice2D
         g = fill(1, N)
         Z = 0.0
         Es = 0.0
-        for c in 0:(q^N - 1)
+        for c in 0:(q ^ N - 1)
             x = c
             @inbounds for i in 1:N
                 g[i] = (x % q) + 1
