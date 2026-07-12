@@ -1,6 +1,6 @@
 name = "ClassicalMonteCarlo"
 uuid = "faaa8aa3-7fc9-41cf-84af-9d0c24f78989"
-version = "0.7.0"
+version = "0.8.0"
 authors = ["sota <shimozono-sota631@g.ecc.u-tokyo.ac.jp>"]
 
 [deps]
