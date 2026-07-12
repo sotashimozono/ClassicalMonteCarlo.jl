@@ -21,7 +21,9 @@ function blocking(series::AbstractVector{<:Real})
         n = length(x)
         μ = sum(x) / n
         v = sum(xi -> (xi - μ)^2, x) / (n - 1)
-        push!(levels, (; level=ℓ, block_size=1 << ℓ, n_blocks=n, mean=μ, stderr=sqrt(v / n)))
+        push!(
+            levels, (; level=ℓ, block_size=1 << ℓ, n_blocks=n, mean=μ, stderr=sqrt(v / n))
+        )
         m = n ÷ 2
         @inbounds for i in 1:m
             x[i] = (x[2i - 1] + x[2i]) / 2

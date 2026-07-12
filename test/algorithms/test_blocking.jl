@@ -20,7 +20,9 @@ using Lattice2D
     # (2) AR(1): plateau error² → (σ²/n)(1+φ)/(1−φ)
     for φ in (0.6, 0.8)
         m = 1 << 18
-        y = zeros(m); y[1] = randn(rng); s = sqrt(1 - φ^2)
+        y = zeros(m);
+        y[1] = randn(rng);
+        s = sqrt(1 - φ^2)
         for i in 2:m
             y[i] = φ * y[i - 1] + s * randn(rng)
         end
