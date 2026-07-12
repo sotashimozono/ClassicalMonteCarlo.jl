@@ -17,8 +17,13 @@ Improved susceptibility χ = ⟨|C|⟩/kbT from the mean Wolff single-cluster si
 `grids` is evolved by the Wolff dynamics. Ferromagnet (J>0) only.
 """
 function wolff_susceptibility(
-    rng::AbstractRNG, grids::AbstractVector{Int}, lat::AbstractLattice,
-    model::IsingModel; kbT::Float64, sweeps::Int, therm::Int=sweeps ÷ 10,
+    rng::AbstractRNG,
+    grids::AbstractVector{Int},
+    lat::AbstractLattice,
+    model::IsingModel;
+    kbT::Float64,
+    sweeps::Int,
+    therm::Int=sweeps ÷ 10,
 )
     model.J > 0 || throw(ArgumentError("Wolff requires a ferromagnet (J > 0)"))
     N = num_sites(lat)
@@ -61,8 +66,13 @@ Improved susceptibility χ = ⟨Σ_c |C|²⟩/(kbT·N) from the Swendsen–Wang 
 decomposition. `grids` is evolved by the SW dynamics. Ferromagnet (J>0) only.
 """
 function swendsen_wang_susceptibility(
-    rng::AbstractRNG, grids::AbstractVector{Int}, lat::AbstractLattice,
-    model::IsingModel; kbT::Float64, sweeps::Int, therm::Int=sweeps ÷ 10,
+    rng::AbstractRNG,
+    grids::AbstractVector{Int},
+    lat::AbstractLattice,
+    model::IsingModel;
+    kbT::Float64,
+    sweeps::Int,
+    therm::Int=sweeps ÷ 10,
 )
     model.J > 0 || throw(ArgumentError("Swendsen–Wang requires a ferromagnet (J > 0)"))
     N = num_sites(lat)

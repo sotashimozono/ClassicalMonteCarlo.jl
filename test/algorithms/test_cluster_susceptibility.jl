@@ -15,13 +15,18 @@ using Lattice2D
     model = IsingModel(; J=1.0, h=0.0)
 
     exact_chi(kbT) = begin
-        g = ones(Int, N); Z = 0.0; M2 = 0.0
-        for cfg in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        M2 = 0.0
+        for cfg in 0:(2 ^ N - 1)
             m = 0
             @inbounds for i in 1:N
-                g[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1; m += g[i]
+                g[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1;
+                m += g[i]
             end
-            w = exp(-total_energy(g, lat, model) / kbT); Z += w; M2 += w * m^2
+            w = exp(-total_energy(g, lat, model) / kbT);
+            Z += w;
+            M2 += w * m^2
         end
         return (M2 / Z) / (kbT * N)
     end
@@ -30,9 +35,12 @@ using Lattice2D
     for kbT in (2.27, 3.0)
         χex = exact_chi(kbT)
         gw = rand(rng, (-1, 1), N)
-        χw = wolff_susceptibility(rng, gw, lat, model; kbT=kbT, sweeps=150_000, therm=15_000).chi
+        χw =
+            wolff_susceptibility(rng, gw, lat, model; kbT=kbT, sweeps=150_000, therm=15_000).chi
         gs = rand(rng, (-1, 1), N)
-        χs = swendsen_wang_susceptibility(rng, gs, lat, model; kbT=kbT, sweeps=150_000, therm=15_000).chi
+        χs = swendsen_wang_susceptibility(
+            rng, gs, lat, model; kbT=kbT, sweeps=150_000, therm=15_000
+        ).chi
         @test isapprox(χw, χex; rtol=0.04)
         @test isapprox(χs, χex; rtol=0.04)
     end
@@ -43,18 +51,27 @@ using Lattice2D
     kbT = 2.27
     g = rand(rng, (-1, 1), N)
     p = 1.0 - exp(-2.0 / kbT)
-    label = zeros(Int, N); stack = Int[]
-    clust = Float64[]; spin = Float64[]
+    label = zeros(Int, N);
+    stack = Int[]
+    clust = Float64[];
+    spin = Float64[]
     for s in 1:60_000
-        fill!(label, 0); nlab = 0; sizes = Int[]
+        fill!(label, 0);
+        nlab = 0;
+        sizes = Int[]
         for start in 1:N
             label[start] == 0 || continue
-            nlab += 1; label[start] = nlab; push!(stack, start); sz = 1
+            nlab += 1;
+            label[start] = nlab;
+            push!(stack, start);
+            sz = 1
             while !isempty(stack)
                 i = pop!(stack)
                 for j in Lattice2D.neighbors(lat, i)
                     if label[j] == 0 && g[j] == g[i] && rand(rng) < p
-                        label[j] = nlab; push!(stack, j); sz += 1
+                        label[j] = nlab;
+                        push!(stack, j);
+                        sz += 1
                     end
                 end
             end
@@ -72,6 +89,10 @@ using Lattice2D
     @test isapprox(mean(clust), mean(spin); rtol=0.03)     # same expectation
     @test blocking_error(clust) < blocking_error(spin)     # smaller variance
 
-    @test_throws ArgumentError wolff_susceptibility(rng, rand(rng, (-1, 1), N), lat, IsingModel(; J=-1.0); kbT=2.0, sweeps=10)
-    @test_throws ArgumentError swendsen_wang_susceptibility(rng, rand(rng, (-1, 1), N), lat, IsingModel(; J=-1.0); kbT=2.0, sweeps=10)
+    @test_throws ArgumentError wolff_susceptibility(
+        rng, rand(rng, (-1, 1), N), lat, IsingModel(; J=-1.0); kbT=2.0, sweeps=10
+    )
+    @test_throws ArgumentError swendsen_wang_susceptibility(
+        rng, rand(rng, (-1, 1), N), lat, IsingModel(; J=-1.0); kbT=2.0, sweeps=10
+    )
 end
