@@ -15,15 +15,19 @@ using Lattice2D
     N = num_sites(lat)
 
     function exact_S(lat, model, kbT)
-        g = ones(Int, N); Z = 0.0; M2 = 0.0
-        for c in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        M2 = 0.0
+        for c in 0:(2 ^ N - 1)
             m = 0
             @inbounds for i in 1:N
                 g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1
                 m += g[i]
             end
-            E = total_energy(g, lat, model); w = exp(-E / kbT)
-            Z += w; M2 += w * m^2
+            E = total_energy(g, lat, model);
+            w = exp(-E / kbT)
+            Z += w;
+            M2 += w * m^2
         end
         return (M2 / Z) / N
     end

@@ -42,11 +42,7 @@ zero-field Ising model with the worm ratio estimator `S = N_total / N_closed`.
 Requires `model.h == 0` (the high-temperature graph expansion is zero-field).
 """
 function worm_susceptibility(
-    rng::AbstractRNG,
-    lat::AbstractLattice,
-    model::IsingModel,
-    alg::WormIsing;
-    kbT::Float64,
+    rng::AbstractRNG, lat::AbstractLattice, model::IsingModel, alg::WormIsing; kbT::Float64
 )
     iszero(model.h) ||
         throw(ArgumentError("worm algorithm requires zero field (model.h == 0)"))
