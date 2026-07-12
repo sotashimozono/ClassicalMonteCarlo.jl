@@ -19,6 +19,7 @@ include("algorithm/wolff.jl")
 include("algorithm/swendsen-wang.jl")
 include("algorithm/wang-landau.jl")
 include("algorithm/heatbath.jl")
+include("algorithm/worm.jl")
 include("algorithm/exchange-montecarlo.jl")
 
 include("utils/paths.jl")
