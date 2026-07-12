@@ -15,13 +15,19 @@ using Lattice2D
     model = IsingModel(; J=1.0, h=0.0)
 
     function exact(kbT)
-        g = ones(Int, N); Z = 0.0; sE = 0.0; sE2 = 0.0
-        for c in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        sE = 0.0;
+        sE2 = 0.0
+        for c in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1
             end
-            E = total_energy(g, lat, model); w = exp(-E / kbT)
-            Z += w; sE += w * E; sE2 += w * E^2
+            E = total_energy(g, lat, model);
+            w = exp(-E / kbT)
+            Z += w;
+            sE += w * E;
+            sE2 += w * E^2
         end
         Em = sE / Z
         return (energy=Em, C=(sE2 / Z - Em^2) / (kbT^2 * N))
@@ -31,7 +37,15 @@ using Lattice2D
     kbT0 = 2.4
     g = rand(rng, (-1, 1), N)
     energies = sample_energies(
-        rng, g, lat, model, LocalUpdate(); kbT=kbT0, sweeps=400_000, therm=20_000, interval=2
+        rng,
+        g,
+        lat,
+        model,
+        LocalUpdate();
+        kbT=kbT0,
+        sweeps=400_000,
+        therm=20_000,
+        interval=2,
     )
 
     # reweighting back to kbT0 reproduces the plain sample mean (sanity)
