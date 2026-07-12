@@ -41,9 +41,7 @@ Integrated autocorrelation time τ_int = 1/2 + Σ_{t=1}^{W} ρ(t) with the autom
 window W (smallest lag with W ≥ c·τ_int). Returns τ and the chosen window.
 """
 function integrated_autocorrelation_time(
-    series::AbstractVector{<:Real};
-    c::Float64=6.0,
-    tmax::Int=min(length(series) ÷ 2, 2000),
+    series::AbstractVector{<:Real}; c::Float64=6.0, tmax::Int=min(length(series) ÷ 2, 2000)
 )
     n = length(series)
     μ = sum(series) / n
