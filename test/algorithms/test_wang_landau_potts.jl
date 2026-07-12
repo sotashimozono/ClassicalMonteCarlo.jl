@@ -12,7 +12,7 @@ function exact_potts_dos(lat, model)
     q = model.q
     g = fill(1, N)
     gE = Dict{Int,Int}()
-    for c in 0:(q^N - 1)
+    for c in 0:(q ^ N - 1)
         x = c
         @inbounds for i in 1:N
             g[i] = (x % q) + 1
@@ -37,7 +37,10 @@ end
 
     grids = rand(rng, 1:3, lat.N)
     energies, lg_wl = wang_landau(
-        rng, grids, lat, model,
+        rng,
+        grids,
+        lat,
+        model,
         WangLandau(; flatness=0.8, ln_f_final=1e-5, check_interval=20_000),
     )
 
@@ -51,8 +54,11 @@ end
     for kbT in (0.8, 1.5)
         β = 1.0 / kbT
         wex = Float64[log(gex[E]) - β * E for E in Es]
-        m = maximum(wex); Z = sum(exp.(wex .- m)); pex = exp.(wex .- m) ./ Z
-        Eex = sum(pex .* Es); Cex = (sum(pex .* Es .^ 2) - Eex^2) / kbT^2
+        m = maximum(wex);
+        Z = sum(exp.(wex .- m));
+        pex = exp.(wex .- m) ./ Z
+        Eex = sum(pex .* Es);
+        Cex = (sum(pex .* Es .^ 2) - Eex^2) / kbT^2
         th = wl_thermodynamics(energies, lg_wl, kbT)
         @test isapprox(th.energy, Eex; rtol=0.03)
         @test isapprox(th.C, Cex; rtol=0.15, atol=0.5)
