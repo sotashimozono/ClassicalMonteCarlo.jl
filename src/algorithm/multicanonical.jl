@@ -31,7 +31,10 @@ Build the multicanonical log-weight S(E) = ln g(E) as a lookup over the tabulate
 support map to `-Inf`, so multicanonical moves never leave the known range.
 """
 function muca_logweight(energies, logg; energy_quantum::Float64=1.0)
-    tab = Dict(round(Int, energies[i] / energy_quantum) => float(logg[i]) for i in eachindex(energies))
+    tab = Dict(
+        round(Int, energies[i] / energy_quantum) => float(logg[i]) for
+        i in eachindex(energies)
+    )
     return E -> get(tab, round(Int, E / energy_quantum), -Inf)
 end
 export muca_logweight

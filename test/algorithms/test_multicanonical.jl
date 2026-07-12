@@ -16,7 +16,7 @@ using Lattice2D
 
     Ω = Dict{Int,Int}()
     let g = ones(Int, N)
-        for c in 0:(2^N - 1)
+        for c in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1
             end
@@ -25,9 +25,12 @@ using Lattice2D
         end
     end
     exactE(kbT) = begin
-        Z = 0.0; sE = 0.0
+        Z = 0.0;
+        sE = 0.0
         for (k, ω) in Ω
-            w = ω * exp(-k / kbT); Z += w; sE += w * k
+            w = ω * exp(-k / kbT);
+            Z += w;
+            sE += w * k
         end
         return sE / Z
     end
@@ -40,7 +43,9 @@ using Lattice2D
     S = muca_logweight(wl_energies, wl_logg)
 
     g1 = fill(1, N)                                   # start inside the support (E=-32)
-    Es = multicanonical(rng, g1, lat, model, S, Multicanonical(; sweeps=800_000, therm=80_000))
+    Es = multicanonical(
+        rng, g1, lat, model, S, Multicanonical(; sweeps=800_000, therm=80_000)
+    )
 
     # (1) flat histogram over the interior of the WL support (drop the two extreme
     # levels, which the reflecting boundary under-samples)
