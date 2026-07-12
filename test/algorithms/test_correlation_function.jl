@@ -16,17 +16,22 @@ using Lattice2D
     rmax = Lx ÷ 2
 
     # exact C(r) along axes by enumeration
-    coord = [(round(Int, position(lat, i)[1]), round(Int, position(lat, i)[2])) for i in 1:N]
+    coord = [
+        (round(Int, position(lat, i)[1]), round(Int, position(lat, i)[2])) for i in 1:N
+    ]
     idx = Dict(coord[i] => i for i in 1:N)
     xs = [idx[(mod(coord[i][1] + r, Lx), coord[i][2])] for i in 1:N, r in 0:rmax]
     ys = [idx[(coord[i][1], mod(coord[i][2] + r, lat.Ly))] for i in 1:N, r in 0:rmax]
     function exact_C(kbT)
-        g = ones(Int, N); Z = 0.0; acc = zeros(rmax + 1)
-        for cfg in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        acc = zeros(rmax + 1)
+        for cfg in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1
             end
-            w = exp(-total_energy(g, lat, model) / kbT); Z += w
+            w = exp(-total_energy(g, lat, model) / kbT);
+            Z += w
             for r in 0:rmax
                 c = 0.0
                 for i in 1:N
@@ -41,7 +46,9 @@ using Lattice2D
     kbT = 2.4
     exC = exact_C(kbT)
     g = rand(rng, (-1, 1), N)
-    mc = spin_correlation_function(rng, g, lat, model, LocalUpdate(); kbT=kbT, sweeps=500_000, therm=30_000, interval=2)
+    mc = spin_correlation_function(
+        rng, g, lat, model, LocalUpdate(); kbT=kbT, sweeps=500_000, therm=30_000, interval=2
+    )
 
     @test isapprox(mc.C[1], 1.0; atol=1e-10)                 # (2) C(0)=1 exactly
     for r in 0:rmax
@@ -52,12 +59,15 @@ using Lattice2D
     # C(r) here is per-axis-averaged; the full 2D sum of ⟨s_i s_j⟩ over j equals
     # ⟨(Σ s)²⟩/N, checked against exact enumeration directly.
     let g2 = ones(Int, N), Z = 0.0, M2 = 0.0
-        for cfg in 0:(2^N - 1)
+        for cfg in 0:(2 ^ N - 1)
             m = 0
             @inbounds for i in 1:N
-                g2[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1; m += g2[i]
+                g2[i] = ((cfg >> (i - 1)) & 1) == 1 ? 1 : -1;
+                m += g2[i]
             end
-            w = exp(-total_energy(g2, lat, model) / kbT); Z += w; M2 += w * m^2
+            w = exp(-total_energy(g2, lat, model) / kbT);
+            Z += w;
+            M2 += w * m^2
         end
         S0 = M2 / Z / N
         # full 2D correlation sum from exact enumeration equals S0 (structure factor at k=0)

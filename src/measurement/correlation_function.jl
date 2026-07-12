@@ -28,7 +28,9 @@ function spin_correlation_function(
     N = num_sites(lat)
     Lx = lat.Lx
     Ly = lat.Ly
-    coord = [(round(Int, position(lat, i)[1]), round(Int, position(lat, i)[2])) for i in 1:N]
+    coord = [
+        (round(Int, position(lat, i)[1]), round(Int, position(lat, i)[2])) for i in 1:N
+    ]
     idx = Dict(coord[i] => i for i in 1:N)
     xshift = [idx[(mod(coord[i][1] + r, Lx), coord[i][2])] for i in 1:N, r in 0:rmax]
     yshift = [idx[(coord[i][1], mod(coord[i][2] + r, Ly))] for i in 1:N, r in 0:rmax]
@@ -41,7 +43,9 @@ function spin_correlation_function(
             @inbounds for r in 0:rmax
                 c = 0.0
                 for i in 1:N
-                    c += grids[i] * grids[xshift[i, r + 1]] + grids[i] * grids[yshift[i, r + 1]]
+                    c +=
+                        grids[i] * grids[xshift[i, r + 1]] +
+                        grids[i] * grids[yshift[i, r + 1]]
                 end
                 acc[r + 1] += c / (2N)
             end
@@ -58,7 +62,9 @@ export spin_correlation_function
 Correlation length ξ from a log-linear least-squares fit of C(r) ~ e^{−r/ξ} over
 the given lags `rs` (only strictly-positive `Cr` entries are used); ξ = −1/slope.
 """
-function correlation_length_from_decay(rs::AbstractVector{<:Real}, Cr::AbstractVector{<:Real})
+function correlation_length_from_decay(
+    rs::AbstractVector{<:Real}, Cr::AbstractVector{<:Real}
+)
     x = Float64[]
     y = Float64[]
     for (r, c) in zip(rs, Cr)
