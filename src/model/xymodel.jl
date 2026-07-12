@@ -69,3 +69,34 @@ function measure_magnetization(grids, lat, ::XYModel)
     M_y = sum(sin, grids)
     return sqrt(M_x^2 + M_y^2) / length(grids)
 end
+
+"""
+    propose(rng, ::Overrelaxation, ..., model::XYModel, site)
+
+Microcanonical over-relaxation move: reflect θ_site about the local-field
+direction φ = arg(Σ_{n∈neighbors} e^{iθ_n}), i.e. θ_site ↦ 2φ − θ_site. Because
+the site's energy is −J|h|cos(θ_site − φ) and the reflection sends
+θ_site − φ ↦ −(θ_site − φ), the total energy is unchanged (ΔE = 0) — the move is
+always accepted under any `AcceptanceRule`. Returns an empty tuple (skip) when
+the local field vanishes and the reflection axis is undefined.
+"""
+function propose(
+    rng::AbstractRNG,
+    ::Overrelaxation,
+    grids::AbstractVector{Float64},
+    lat::AbstractLattice,
+    model::XYModel,
+    site::Int;
+    kwargs...,
+)
+    hx = 0.0
+    hy = 0.0
+    for n in neighbors(lat, site)
+        hx += cos(grids[n])
+        hy += sin(grids[n])
+    end
+    (hx == 0.0 && hy == 0.0) && return ()
+    φ = atan(hy, hx)
+    θ = grids[site]
+    return (LocalChange(site, 2φ - θ, θ),)
+end

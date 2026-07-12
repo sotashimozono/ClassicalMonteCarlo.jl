@@ -83,6 +83,15 @@ Shifts the current value by a random amount drawn uniformly from `[-width/2, wid
     width::Float64 = 0.1
 end
 export UniformShift
+"""
+Overrelaxation: microcanonical (energy-conserving) reflection move for continuous
+spins (XY): reflect the angle about the local-field direction, θ ↦ 2·arg(h) − θ.
+Deterministic, ΔE = 0 (always accepted), and decorrelates far faster than a random
+shift. NOT ergodic on its own (it conserves energy) — interleave with a canonical
+proposal such as [](@ref). (Creutz/Adler over-relaxation.)
+"""
+struct Overrelaxation <: ProposalMethod end
+export Overrelaxation
 
 # --- Rules ---
 """
