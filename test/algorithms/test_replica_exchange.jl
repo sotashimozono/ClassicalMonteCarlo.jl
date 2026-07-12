@@ -16,13 +16,17 @@ using Lattice2D
     model = IsingModel(; J=1.0, h=0.0)
 
     exactE(kbT) = begin
-        g = ones(Int, N); Z = 0.0; sE = 0.0
-        for c in 0:(2^N - 1)
+        g = ones(Int, N);
+        Z = 0.0;
+        sE = 0.0
+        for c in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1
             end
-            E = total_energy(g, lat, model); w = exp(-E / kbT)
-            Z += w; sE += w * E
+            E = total_energy(g, lat, model);
+            w = exp(-E / kbT)
+            Z += w;
+            sE += w * E
         end
         return sE / Z
     end
