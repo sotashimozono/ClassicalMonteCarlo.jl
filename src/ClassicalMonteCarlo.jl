@@ -23,6 +23,7 @@ include("algorithm/worm.jl")
 include("algorithm/nfoldway.jl")
 include("algorithm/exchange-montecarlo.jl")
 include("algorithm/reweighting.jl")
+include("algorithm/wham.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
