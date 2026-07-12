@@ -15,8 +15,9 @@ using Lattice2D
 
     # exact global minimum energy over all 2^N Ising configs
     function exact_min_ising(model)
-        g = ones(Int, N); Emin = Inf
-        for c in 0:(2^N - 1)
+        g = ones(Int, N);
+        Emin = Inf
+        for c in 0:(2 ^ N - 1)
             @inbounds for i in 1:N
                 g[i] = ((c >> (i - 1)) & 1) == 1 ? 1 : -1
             end
@@ -29,12 +30,16 @@ using Lattice2D
     for model in (IsingModel(; J=1.0, h=0.0), IsingModel(; J=-1.0, h=0.0))
         Emin = exact_min_ising(model)
         # best of a few annealing restarts must equal the exact ground energy
-        best = Inf; bestcfg = Int[]
+        best = Inf;
+        bestcfg = Int[]
         for r in 1:6
             g = rand(rng, (-1, 1), N)
-            res = simulated_anneal(rng, g, lat, model, SimulatedAnnealing(; steps=300, sweeps_per_step=15))
+            res = simulated_anneal(
+                rng, g, lat, model, SimulatedAnnealing(; steps=300, sweeps_per_step=15)
+            )
             if res.energy < best
-                best = res.energy; bestcfg = res.config
+                best = res.energy;
+                bestcfg = res.config
             end
         end
         @test best ≈ Emin
@@ -48,12 +53,18 @@ using Lattice2D
         best = Inf
         for r in 1:6
             g = rand(rng, 1:3, N)
-            res = simulated_anneal(rng, g, lat, model, SimulatedAnnealing(; steps=300, sweeps_per_step=15))
+            res = simulated_anneal(
+                rng, g, lat, model, SimulatedAnnealing(; steps=300, sweeps_per_step=15)
+            )
             best = min(best, res.energy)
         end
         @test best ≈ Emin
     end
 
-    @test_throws ArgumentError simulated_anneal(rng, rand(rng, (-1, 1), N), lat, IsingModel(), SimulatedAnnealing(; steps=1))
-    @test_throws ArgumentError simulated_anneal(rng, rand(rng, (-1, 1), N), lat, IsingModel(), SimulatedAnnealing(; T0=1.0, Tf=2.0))
+    @test_throws ArgumentError simulated_anneal(
+        rng, rand(rng, (-1, 1), N), lat, IsingModel(), SimulatedAnnealing(; steps=1)
+    )
+    @test_throws ArgumentError simulated_anneal(
+        rng, rand(rng, (-1, 1), N), lat, IsingModel(), SimulatedAnnealing(; T0=1.0, Tf=2.0)
+    )
 end
