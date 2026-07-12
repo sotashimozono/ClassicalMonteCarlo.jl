@@ -28,6 +28,7 @@ include("algorithm/multicanonical.jl")
 include("algorithm/annealing.jl")
 include("measurement/correlation_length.jl")
 include("measurement/thermodynamics.jl")
+include("measurement/autocorrelation.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
