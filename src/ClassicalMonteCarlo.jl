@@ -32,6 +32,7 @@ include("measurement/autocorrelation.jl")
 include("measurement/correlation_function.jl")
 include("measurement/resampling.jl")
 include("measurement/blocking.jl")
+include("measurement/cluster_susceptibility.jl")
 
 include("utils/paths.jl")
 include("utils/visualize.jl")
