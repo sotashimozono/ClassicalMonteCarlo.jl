@@ -1,6 +1,6 @@
 module ClassicalMonteCarlo
 
-using Lattice2D, Pkg
+using LatticeCore, Pkg
 using Random, Statistics, LinearAlgebra
 using Plots, ColorSchemes
 using CSV, DataFrames

@@ -11,6 +11,20 @@
 # On an L×L lattice |k_min| = 2π/L, so the prefactor is 1/(2 sin(π/L)). This ξ is
 # the quantity used in finite-size-scaling collapses (ξ/L crossings locate Tc).
 
+# Linear extents (Lx, Ly) of a regular-grid lattice, derived from the abstract
+# `position` interface (LatticeCore) so no concrete lattice fields are needed:
+# integer coordinates 0…L−1 along each axis give L = max coordinate + 1.
+function _grid_extents(lat::AbstractLattice)
+    mx = 0
+    my = 0
+    for i in 1:num_sites(lat)
+        r = position(lat, i)
+        mx = max(mx, round(Int, r[1]))
+        my = max(my, round(Int, r[2]))
+    end
+    return (mx + 1, my + 1)
+end
+
 """
     structure_factor(config, lat, kx, ky) -> Float64
 
@@ -64,8 +78,7 @@ function measure_correlation_length(
     therm::Int=sweeps ÷ 10,
     interval::Int=1,
 )
-    Lx = lat.Lx
-    Ly = lat.Ly
+    Lx, Ly = _grid_extents(lat)
     kx = 2π / Lx
     ky = 2π / Ly
     S0 = 0.0
