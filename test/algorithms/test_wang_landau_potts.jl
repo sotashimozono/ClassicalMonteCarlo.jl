@@ -8,7 +8,7 @@ using Lattice2D
 # model, validated against the EXACT density of states (all 3^9 configs of a 3×3
 # lattice), never another MC run.
 function exact_potts_dos(lat, model)
-    N = lat.N
+    N = num_sites(lat)
     q = model.q
     g = fill(1, N)
     gE = Dict{Int,Int}()
@@ -35,7 +35,7 @@ end
     lg_ex = Float64[log(gex[E]) for E in Es]
     lg_ex .-= minimum(lg_ex)
 
-    grids = rand(rng, 1:3, lat.N)
+    grids = rand(rng, 1:3, num_sites(lat))
     energies, lg_wl = wang_landau(
         rng,
         grids,

@@ -39,10 +39,11 @@ using Lattice2D
     end
 
     # blocking levels: block size doubles, block count halves
-    lv = blocking(x)
+    # qualify: Lattice2D also exports `blocking` (lattice coarse-graining) — different function
+    lv = ClassicalMonteCarlo.blocking(x)
     @test lv[1].block_size == 1 && lv[1].n_blocks == n
     @test lv[2].block_size == 2 && lv[2].n_blocks == n ÷ 2
     @test isapprox(lv[1].mean, mean(x); rtol=1e-12)
 
-    @test_throws ArgumentError blocking([1.0])
+    @test_throws ArgumentError ClassicalMonteCarlo.blocking([1.0])
 end

@@ -44,7 +44,7 @@ struct OrderCheckModel <: AbstractModel{Int} end
 @testset "Local Update Logic" begin
     rng = MersenneTwister(1234)
     lat = build_lattice(rand([AVAILABLE_LATTICES...]), 4, 4)
-    N = lat.N
+    N = num_sites(lat)
 
     @testset "Acceptance Rules" begin
         metro = Metropolis()

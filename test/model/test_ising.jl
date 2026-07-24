@@ -6,7 +6,7 @@ using Lattice2D
 @testset "Ising Model Tests" begin
     rng = MersenneTwister(42)
     lat = build_lattice(Square, 3, 3)
-    N = lat.N
+    N = num_sites(lat)
 
     model = IsingModel(; J=1.0, h=0.1)
     @testset "Local Hamiltonian" begin

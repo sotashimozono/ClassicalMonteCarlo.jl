@@ -28,7 +28,7 @@ end
     # φ=α with magnitude h=deg(site); draw the site repeatedly and compare the
     # sample circular mean & resultant length to the von Mises closed form.
     α = 0.7
-    grids = fill(α, lat.N)
+    grids = fill(α, num_sites(lat))
     site = 5                                   # a bulk (degree-4) site on 3×3 PBC
     deg = length(Lattice2D.neighbors(lat, site))
     for kbT in (0.5, 1.5)
@@ -52,7 +52,7 @@ end
     mp = LocalUpdate(; rule=Metropolis(), proposal=UniformShift(; width=2π))
     function run_E(alg, seed)
         r = MersenneTwister(seed);
-        g = 2π .* rand(r, lat.N);
+        g = 2π .* rand(r, num_sites(lat));
         Es = Float64[]
         for step in 1:15_000
             ClassicalMonteCarlo.update_step!(r, g, lat, model, alg; kbT=kbT)

@@ -48,14 +48,14 @@ end
 
     lat = build_lattice(rand(Lattice2D.AVAILABLE_LATTICES), Lx, Ly)
 
-    grids = ones(Int, lat.N)
+    grids = ones(Int, num_sites(lat))
     model = MockModel()
     alg = MockAlgorithm()
     kbT = 1.0
 
     @testset "Energy Calculation" begin
         E = total_energy(grids, lat, model)
-        @test E ≈ float(lat.N) / 2.0
+        @test E ≈ float(num_sites(lat)) / 2.0
     end
 
     @testset "Simulation Loop (run!)" begin

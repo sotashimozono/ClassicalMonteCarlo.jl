@@ -21,7 +21,7 @@ using Lattice2D
     # EXACT canonical average restricted to Σs=0 configs (independent oracle:
     # enumeration over the C(16,8) constrained states).
     function exact_E_fixedM(lat, model, kbT, M)
-        N = lat.N;
+        N = num_sites(lat);
         g = ones(Int, N);
         Z = 0.0;
         Es = 0.0
