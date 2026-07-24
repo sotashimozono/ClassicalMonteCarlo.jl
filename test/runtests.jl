@@ -1,6 +1,9 @@
 ENV["GKSwstype"] = "100"
 
 using Test
+# LatticeCore first: the generic lattice UI (AbstractLattice, num_sites, neighbors,
+# position, bonds, …) is taken directly from LatticeCore, not via a Lattice2D re-export.
+using LatticeCore
 using Lattice2D, ClassicalMonteCarlo
 using Random, Statistics, Plots, DataFrames
 

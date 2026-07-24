@@ -7,7 +7,7 @@ using Lattice2D
 # all 2^N Ising configurations (feasible for L=4 ⇒ 2^16). Everything below is
 # checked against this closed-form reference, never against another MC run.
 function exact_ising_dos(lat, model)
-    N = lat.N
+    N = num_sites(lat)
     N <= 20 || error("enumeration too large")
     g = Dict{Int,Int}()
     grids = ones(Int, N)
@@ -33,7 +33,7 @@ end
     @test sum(values(gex)) == 2^16         # enumeration sanity: all states counted
     @test gex[-32] == 2                     # two ferromagnetic ground states
 
-    grids = rand(rng, (-1, 1), lat.N)
+    grids = rand(rng, (-1, 1), num_sites(lat))
     energies, lg_wl = wang_landau(
         rng,
         grids,

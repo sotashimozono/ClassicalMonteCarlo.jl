@@ -34,7 +34,7 @@ if !isdefined(Main, :MC_VALIDATION_HELPERS_LOADED)
     """
     function exact_ising(Lx::Int, Ly::Int, β::Float64; J::Float64=1.0)
         lat = build_lattice(Square, Lx, Ly)
-        N = lat.N
+        N = num_sites(lat)
         @assert N ≤ 24 "exact enumeration only for N ≤ 24 (got $N)"
         model = IsingModel(; J=J, h=0.0)
         Z = 0.0
@@ -68,7 +68,7 @@ if !isdefined(Main, :MC_VALIDATION_HELPERS_LOADED)
     function mc_chain(
         seed::Int, lat, model, alg, T::Float64; burn::Int, nsteps::Int, interval::Int=10
     )
-        N = lat.N
+        N = num_sites(lat)
         rng = MersenneTwister(seed)
         grids = rand(rng, [-1, 1], N)
         run!(rng, grids, lat, model, alg, AbstractObserver[]; kbT=T, nsteps=burn)
@@ -143,7 +143,7 @@ if !isdefined(Main, :MC_VALIDATION_HELPERS_LOADED)
         us = Float64[]
         for s in 1:nseed
             rng = MersenneTwister(seed0 * s + L)
-            grids = rand(rng, [-1, 1], lat.N)
+            grids = rand(rng, [-1, 1], num_sites(lat))
             run!(
                 rng,
                 grids,
@@ -165,7 +165,7 @@ if !isdefined(Main, :MC_VALIDATION_HELPERS_LOADED)
                 kbT=T,
                 nsteps=nsteps,
             )
-            push!(us, get_thermodynamics(obs, T, lat.N, model)["BinderParam"])
+            push!(us, get_thermodynamics(obs, T, num_sites(lat), model)["BinderParam"])
         end
         return mean(us)
     end

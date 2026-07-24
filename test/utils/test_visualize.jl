@@ -9,7 +9,7 @@ ENV["GKSwstype"] = "100"
 
 @testset "Visualization Methods" begin
     lat = build_lattice(Square, 4, 4)
-    N = lat.N
+    N = num_sites(lat)
 
     @testset "Helper Functions" begin
         ms = find_marker_size(lat)

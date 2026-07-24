@@ -1,7 +1,7 @@
 @testset "Potts Model Tests" begin
     rng = MersenneTwister(42)
     lat = build_lattice(Square, 3, 3)
-    N = lat.N
+    N = num_sites(lat)
 
     q = 3
     model = PottsModel(; q=q, J=1.0)

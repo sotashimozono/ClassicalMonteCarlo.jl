@@ -12,7 +12,7 @@ include(joinpath(@__DIR__, "..", "ci", "universe.jl"))
 @testset "physical limits" begin
     L = 8
     lat = build_lattice(Square, L, L)
-    N = lat.N
+    N = num_sites(lat)
     model = IsingModel(; J=1.0, h=0.0)
 
     run_case("limits_ising_lowT") do

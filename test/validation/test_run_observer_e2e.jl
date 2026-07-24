@@ -16,7 +16,7 @@ run_case("run_observer_e2e") do
     @testset "run! + ThermodynamicObserver end-to-end (dispatch regression)" begin
         L = 8
         lat = build_lattice(Square, L, L)
-        N = lat.N
+        N = num_sites(lat)
         model = IsingModel(; J=1.0, h=0.0)
         alg = LocalUpdate(; rule=Metropolis(), selection=RandomSiteSelection())
         T = 2.5

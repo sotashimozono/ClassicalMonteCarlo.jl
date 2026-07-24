@@ -1,6 +1,6 @@
 @testset "Advanced Observer System" begin
     lat = build_lattice(Square, 4, 4)
-    N = lat.N
+    N = num_sites(lat)
     kbT = 2.0
     rng = Random.default_rng()
 

@@ -9,7 +9,7 @@ using Lattice2D
     rng = MersenneTwister(3)
     lat = build_lattice(Square, 3, 3)
     model = PottsModel(; q=3, J=1.0)
-    grids = fill(1, lat.N)
+    grids = fill(1, num_sites(lat))
     ns = collect(neighbors(lat, 1))
     grids[ns[1]] = 1
     grids[ns[2]] = 1
@@ -28,7 +28,7 @@ using Lattice2D
     # (2) CANONICAL correctness: heat-bath ⟨E⟩(T) matches the EXACT canonical
     # average from full enumeration of all 3^9 configs (independent oracle).
     function exact_energy(lat, model, kbT)
-        N = lat.N
+        N = num_sites(lat)
         q = model.q
         g = fill(1, N)
         Z = 0.0
@@ -48,7 +48,7 @@ using Lattice2D
     end
     kbT2 = 1.0
     Eex = exact_energy(lat, model, kbT2)
-    g = rand(rng, 1:3, lat.N)
+    g = rand(rng, 1:3, num_sites(lat))
     Emc = Float64[]
     for step in 1:6000
         ClassicalMonteCarlo.update_step!(rng, g, lat, model, HeatBath(); kbT=kbT2)
@@ -61,7 +61,7 @@ using Lattice2D
     im = IsingModel(; J=1.0, h=0.0)
     function meanE(alg; kbT, seed)
         r = MersenneTwister(seed)
-        g2 = rand(r, (-1, 1), lat2.N)
+        g2 = rand(r, (-1, 1), num_sites(lat2))
         E = Float64[]
         for s in 1:6000
             ClassicalMonteCarlo.update_step!(r, g2, lat2, im, alg; kbT=kbT)
