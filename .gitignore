@@ -1,5 +1,8 @@
 docs/build/
 docs/Manifest.toml
+# Package Manifest is not committed — CI resolves deps fresh from the registry
+# so the package follows its registered dependencies instead of a stale pin.
+/Manifest.toml
 dev/
 # Jupyter notebooks
 *.ipynb
