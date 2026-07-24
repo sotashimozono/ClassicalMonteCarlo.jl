@@ -1,6 +1,6 @@
 name = "ClassicalMonteCarlo"
 uuid = "faaa8aa3-7fc9-41cf-84af-9d0c24f78989"
-version = "0.8.0"
+version = "0.8.1"
 authors = ["sota <shimozono-sota631@g.ecc.u-tokyo.ac.jp>"]
 
 [deps]
@@ -20,14 +20,8 @@ Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 ClassicalMonteCarloDataFramesExt = "DataFrames"
 ClassicalMonteCarloPlotsExt = ["Plots", "ColorSchemes"]
 
-[sources.Lattice2D]
-rev = "v0.2.2"
-url = "https://github.com/sotashimozono/Lattice2D.jl.git"
-
-[sources.LatticeCore]
-rev = "v0.7.3"
-url = "https://github.com/sotashimozono/LatticeCore.jl.git"
-
+# Lattice2D and LatticeCore are in the General registry — resolve them from there
+# (no [sources] override, no [compat] pin) so CMC simply follows their releases.
 [sources.QAtlas]
 rev = "v0.25.0"
 url = "https://github.com/sotashimozono/QAtlas.jl.git"
@@ -35,8 +29,6 @@ url = "https://github.com/sotashimozono/QAtlas.jl.git"
 [compat]
 ColorSchemes = "3"
 DataFrames = "1"
-Lattice2D = "0.2, 0.3, 0.4, 0.5"
-LatticeCore = "0.7, 0.12"
 LinearAlgebra = "1"
 Pkg = "1"
 Plots = "1"
