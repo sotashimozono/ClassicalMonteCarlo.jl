@@ -1,3 +1,5 @@
 docs/build/
 docs/Manifest.toml
 dev/
+# Jupyter notebooks
+*.ipynb
