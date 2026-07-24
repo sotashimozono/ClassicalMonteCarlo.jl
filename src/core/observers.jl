@@ -76,10 +76,11 @@ end
 
 Converts the recorded history of a `FunctionObserver` into a DataFrame.
 Returns columns `:Step` and `Symbol(obs.name)`.
+
+Requires `DataFrames` to be loaded; the method is provided by the
+`ClassicalMonteCarloDataFramesExt` package extension.
 """
-function to_dataframe(obs::FunctionObserver)
-    return DataFrame(:Step => obs.steps, Symbol(obs.name) => obs.history)
-end
+function to_dataframe end
 """
     ThermodynamicObserver(; interval::Int=10)
 
