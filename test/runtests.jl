@@ -2,7 +2,7 @@ ENV["GKSwstype"] = "100"
 
 using Test
 using Lattice2D, ClassicalMonteCarlo
-using Random, Statistics, Plots
+using Random, Statistics, Plots, DataFrames
 
 const FIG_BASE = joinpath(pkgdir(ClassicalMonteCarlo), "docs", "src", "assets", "figures")
 const FIG_LAT = joinpath(FIG_BASE, "lattice")
