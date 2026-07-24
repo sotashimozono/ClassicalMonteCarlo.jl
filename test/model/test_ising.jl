@@ -48,7 +48,7 @@ using Lattice2D
                 @test c1.new_val == c2.old_val
                 @test c2.new_val == c1.old_val
 
-                @test c2.index in lat.nearest_neighbors[1]
+                @test c2.index in neighbors(lat, 1)
                 break
             end
         end
@@ -75,9 +75,9 @@ using Lattice2D
 
         @testset "SpinExchange Consistency (Neighbor Correction)" begin
             site1 = 1
-            neighbors = lat.nearest_neighbors[site1]
+            nbrs = collect(neighbors(lat, site1))
             target_neighbor = 0
-            for n in neighbors
+            for n in nbrs
                 if grids[n] != grids[site1]
                     target_neighbor = n
                     break
@@ -85,7 +85,7 @@ using Lattice2D
             end
 
             if target_neighbor == 0
-                target_neighbor = neighbors[1]
+                target_neighbor = nbrs[1]
                 grids[target_neighbor] = -grids[site1]
                 E_total_old = total_energy(grids, lat, model)
             end
