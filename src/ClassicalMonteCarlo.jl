@@ -2,8 +2,9 @@ module ClassicalMonteCarlo
 
 using LatticeCore, Pkg
 using Random, Statistics, LinearAlgebra
-using Plots, ColorSchemes
-using CSV, DataFrames
+# Plotting (Plots + ColorSchemes) and DataFrames output are optional and live
+# in package extensions — the generic-function stubs are declared in
+# `utils/visualize.jl` and `core/observers.jl`.
 
 include("core/abstracttypes.jl")
 include("core/observers.jl")
