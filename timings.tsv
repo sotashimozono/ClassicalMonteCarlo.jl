@@ -1,0 +1,10 @@
+cross_algo_ising	1.733404675
+exact_ising_bruteZ	0.215535817
+exact_ising_mc	0.84228523
+limits_ising_highT	0.275921834
+limits_ising_lowT	0.002196295
+qatlas_beta_consistency	3.534161498
+qatlas_binder_crossing	14.870814987
+qatlas_oracle_sanity	0.000172051
+qatlas_yang_mag	8.049235964
+run_observer_e2e	0.032727278
